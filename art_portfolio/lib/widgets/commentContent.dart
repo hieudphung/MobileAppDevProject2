@@ -14,7 +14,7 @@ class CommentForm extends StatelessWidget {
 
   final String imageID;
 
-  void _addCommentDialog(BuildContext context) {
+  void addCommentDialog(BuildContext context) {
     //For holding data from form
     Map data = {};
     void saveData(String formField, dynamic formInput){data[formField] = formInput;}
@@ -31,7 +31,7 @@ class CommentForm extends StatelessWidget {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Leave a Comment'),
-          content: CommentPostForm(keepingData: saveData),
+          content: CommentPostForm(keepingData: saveData, oldText: ''),
           actions: <Widget>[
             TextButton(
               child: const Text('Cancel'),
@@ -64,7 +64,7 @@ class CommentForm extends StatelessWidget {
         child: IconButton(
           icon: const Icon(Icons.comment),
           onPressed: () {
-            _addCommentDialog(context);
+            addCommentDialog(context);
           }
         )
         //Text('Description: $imageDescription'),
@@ -74,9 +74,11 @@ class CommentForm extends StatelessWidget {
 
 class CommentPostForm extends StatefulWidget {
   const CommentPostForm({super.key,
-  required this.keepingData});
+  required this.keepingData,
+  required this.oldText});
 
   final Function keepingData;
+  final String oldText;
 
   @override
   State<CommentPostForm> createState() => _AddGoalFormState();
@@ -99,7 +101,9 @@ class _AddGoalFormState extends State<CommentPostForm> {
   @override
   void initState() {
     super.initState();
-  
+
+    _comment = widget.oldText;
+
     widget.keepingData('validated', validated);
     widget.keepingData('comment', _comment);
   }
@@ -122,6 +126,8 @@ class _AddGoalFormState extends State<CommentPostForm> {
               maxLines: 6,
               minLines: 1,
 
+              initialValue: widget.oldText,
+
               onChanged: (value) {
                 _comment = value;
 
@@ -140,16 +146,13 @@ class _AddGoalFormState extends State<CommentPostForm> {
   }
 }
 
-
-
-
-
-
 class CommentBox extends StatelessWidget {
   const CommentBox ({super.key,
-  required this.imageID});
+  required this.imageID,
+  required this.creatorID});
 
   final String imageID;
+  final String creatorID;
   
   @override
   Widget build(BuildContext context) {
@@ -172,7 +175,7 @@ class CommentBox extends StatelessWidget {
                 
                 Comment commentToCard = Comment(id: documentSnapshot.id, userID: documentSnapshot['userID'], comment: documentSnapshot['comment']);
 
-                return CommentCard(comment: commentToCard);
+                return CommentCard(comment: commentToCard, creatorID: creatorID);
               }
             );
            } else {
@@ -191,23 +194,152 @@ class CommentBox extends StatelessWidget {
 class CommentCard extends StatelessWidget {
   const CommentCard({super.key,
     required this.comment,
+    required this.creatorID,
   });
 
   final Comment comment;
+  final String creatorID;
 
   @override
   Widget build(BuildContext context) {
+    User currentUser = FirebaseAuth.instance.currentUser!;
+
+
+    void editCommentDialog(BuildContext context) {
+    //For holding data from form
+    Map data = {};
+    void saveData(String formField, dynamic formInput){data[formField] = formInput;}
+
+    //For sending to database
+    Future<void> postComment(String editedComment) async {
+      await GalleryStoreService.instance.updateComment(comment.id, editedComment);
+    }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Edit Comment'),
+          content: CommentPostForm(keepingData: saveData, oldText: comment.comment),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+
+                //goalFromForm = emptyGoal;
+              },
+            ),
+            TextButton(
+              child: const Text('Post'),
+              onPressed: () async {
+                // Adding to provider
+                postComment(data['comment']);
+
+                // Handle adding new goal
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void deleteCommentDialog(BuildContext context) {
+    //For sending to database
+    Future<void> deleteComment() async {
+      await GalleryStoreService.instance.deleteComment(comment.id);
+    }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Are you sure you want to delete this comment?'),
+          //content: CommentPostForm(keepingData: ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+
+                //goalFromForm = emptyGoal;
+              },
+            ),
+            TextButton(
+              child: const Text('Delete'),
+              onPressed: () async {
+                // Adding to provider
+                deleteComment();
+
+                // Handle adding new goal
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
     //Get the user before building
     return FutureBuilder <UserGalleryInfo>(
       future: GalleryStoreService.instance.getUser(comment.userID),
-      builder: (BuildContext context, AsyncSnapshot<UserGalleryInfo> user) {
-        if (user.hasData) {
+      builder: (BuildContext context, AsyncSnapshot<UserGalleryInfo> userComment) {
+        if (userComment.hasData) {
 
-          UserGalleryInfo userInfo = user.data!;
+          UserGalleryInfo userInfo = userComment.data!;
 
-          return Card(
-            child: Text('${userInfo.username}: ${comment.comment}')
-          );
+          //also check whether or not the user ID is the same as the token, or if user ID is the same as the image creator's ID, to show
+          if (currentUser.uid == comment.userID) {
+            return Card(
+              child: 
+              Column(
+                children: <Widget>[
+                    Text('${userInfo.username}: ${comment.comment}'),
+                    Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      IconButton(
+                        icon: const Icon(Icons.edit),
+                        onPressed: () => editCommentDialog(context),),
+                      IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () => deleteCommentDialog(context),)
+                    ],),
+                ]
+              )
+            );
+
+            //Under a creator's work
+          } else if (currentUser.uid == creatorID) {
+            return Card(
+              child: 
+              Column(
+                children: <Widget>[
+                  Text('${userInfo.username}: ${comment.comment}'),
+                  Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                      IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () => deleteCommentDialog(context),)
+                    ],),
+                ]
+              )
+            );
+          } else {
+            return Card(
+              child: 
+              Column(
+                children: <Widget>[
+                  Text('${userInfo.username}: ${comment.comment}'),
+                ]
+              )
+            );
+          }
         }
 
         return const Text('Loading comment...');

@@ -64,6 +64,20 @@ class GalleryStoreService {
 
     await comments.add({"userID": uid, "imageID": imageID, "comment": comment});
   }
+
+  Future<void> deleteComment(String commentID) async {
+    CollectionReference comments = await instance.comments;
+
+    await comments.doc(commentID).delete();
+  }
+
+  Future<void> updateComment(String commentID, String newComment) async {
+    CollectionReference comments = await instance.comments;
+
+    await comments.doc(commentID).update({
+      "comment": newComment,
+    });
+  }
   
   Stream<QuerySnapshot<Object?>> getCommentStream(String imgID) async* {
     CollectionReference comments = await instance.comments;

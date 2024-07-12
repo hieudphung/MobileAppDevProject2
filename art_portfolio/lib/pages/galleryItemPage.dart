@@ -17,7 +17,10 @@ class GalleryItemPage extends StatelessWidget {
     return Scaffold(
             appBar: AppBar(title: Text(galleryItem.imageName),
                            backgroundColor: const Color.fromARGB(255, 79, 255, 240)),
-            body: GalleryItemBody(imageID: galleryItem.imageID, src: galleryItem.src, description: galleryItem.description));
+            body: GalleryItemBody(imageID: galleryItem.imageID, 
+                                  src: galleryItem.src, 
+                                  description: galleryItem.description,
+                                  creatorID: galleryItem.userID));
   }
 }
 
@@ -25,12 +28,14 @@ class GalleryItemBody extends StatelessWidget {
   const GalleryItemBody({super.key,
   required this.imageID,
   required this.src,
-  required this.description
+  required this.description,
+  required this.creatorID
   });
 
   final String imageID;
   final String src;
   final String description;
+  final String creatorID;
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +47,10 @@ class GalleryItemBody extends StatelessWidget {
       child: userBar(),
     ),
     Expanded(flex: 2, child: ItemImage(imageSrc: src),),
-    Expanded(child: DescriptionBox(imageDescription: description)),
+    Flexible(child: SetButtons(imageID: imageID, creatorID: creatorID)),
+    Flexible(child: DescriptionBox(imageDescription: description)),
     Flexible(child: CommentForm(imageID: imageID)),
-    Expanded(child: CommentBox(imageID: imageID)),
+    Expanded(child: CommentBox(imageID: imageID, creatorID: creatorID)),
       ],
     );
   }
