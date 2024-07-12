@@ -11,11 +11,13 @@ class GalleryStoreService {
   static CollectionReference? _gallery;
   static CollectionReference? _comments;
   static CollectionReference? _users;
+  static CollectionReference? _favorites;
 
   GalleryStoreService._init(){
     _gallery = FirebaseFirestore.instance.collection('gallery');
     _comments = FirebaseFirestore.instance.collection('comments');
     _users = FirebaseFirestore.instance.collection('users');
+    _favorites = FirebaseFirestore.instance.collection('favorites');
   }
 
   Future<CollectionReference> get gallery async {
@@ -51,6 +53,17 @@ class GalleryStoreService {
     _users = FirebaseFirestore.instance.collection('users');
   }
 
+  Future<CollectionReference> get favorites async {
+    if (_favorites != null) return _favorites!;
+
+    _favorites = await _getFavorites();
+    return _favorites!;
+  }
+
+  Future _getFavorites() async {
+    _users = FirebaseFirestore.instance.collection('favorites');
+  }
+
   Stream<QuerySnapshot<Object?>> getGalleryStream() async* {
     CollectionReference gallery = await instance.gallery;
 
@@ -83,6 +96,26 @@ class GalleryStoreService {
     CollectionReference comments = await instance.comments;
     
     Stream<QuerySnapshot<Object?>> snapshots = comments.where('imageID', isEqualTo: imgID).snapshots();
+
+    yield* snapshots;
+  }
+
+  Future<void> addFavorite(String imageID, String uid) async {
+    CollectionReference favorites = await instance.favorites;
+
+    await favorites.add({"userID": uid, "imageID": imageID});
+  }
+
+  Future<void> deleteFavorite(String favoriteID) async {
+    CollectionReference favorites = await instance.favorites;
+
+    await favorites.doc(favoriteID).delete();
+  }
+
+  Stream<QuerySnapshot<Object?>> getFavoritesStream(String imgID) async* {
+    CollectionReference favorites = await instance.favorites;
+    
+    Stream<QuerySnapshot<Object?>> snapshots = favorites.where('imageID', isEqualTo: imgID).snapshots();
 
     yield* snapshots;
   }
