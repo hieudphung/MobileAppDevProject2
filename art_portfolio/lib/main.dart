@@ -23,8 +23,8 @@ class TaskApp extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    const titleText = "Classwork Three";
-    const appBarText = "Task List with Firebase";
+    const titleText = "Mobile App Final";
+    const appBarText = "Portfolio Post";
 
     return MaterialApp(
       title: titleText,

@@ -3,67 +3,88 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 // Initialize Cloud Firestore and get a reference to the service
 //const db = Firestore.getFirestore(app);
 
-class StoreService {
-  static final StoreService instance = StoreService._init();
+class GalleryStoreService {
+  static final GalleryStoreService instance = GalleryStoreService._init();
 
-  static CollectionReference? _tasks;
+  static CollectionReference? _gallery;
+  static CollectionReference? _comments;
   static CollectionReference? _users;
 
-  StoreService._init(){
-    _tasks = FirebaseFirestore.instance.collection('testTasks');
+  GalleryStoreService._init(){
+    _gallery = FirebaseFirestore.instance.collection('gallery');
+    _comments = FirebaseFirestore.instance.collection('comments');
     _users = FirebaseFirestore.instance.collection('users');
   }
 
-  Future<CollectionReference> get tasks async {
-    if (_tasks != null) return _tasks!;
+  Future<CollectionReference> get gallery async {
+    if (_gallery != null) return _gallery!;
 
-    _tasks = await _getFirebaseTasks();
-    return _tasks!;
+    _gallery = await _getGallery();
+    return _gallery!;
   }
 
-  Future _getFirebaseTasks() async {
-    _tasks = FirebaseFirestore.instance.collection('testTasks');
+  Future _getGallery() async {
+    _gallery = FirebaseFirestore.instance.collection('gallery');
+  }
+
+  Future<CollectionReference> get comments async {
+    if (_comments != null) return _comments!;
+
+    _comments = await _getComments();
+    return _comments!;
+  }
+
+  Future _getComments() async {
+    _comments = FirebaseFirestore.instance.collection('comments');
   }
 
   Future<CollectionReference> get users async {
     if (_users != null) return _users!;
 
-    _users = await _getFirebaseUsers();
+    _users = await _getUsers();
     return _users!;
   }
 
-  Future _getFirebaseUsers() async {
+  Future _getUsers() async {
     _users = FirebaseFirestore.instance.collection('users');
   }
 
-  Future<void> addTask(String description, String uid) async {
-    CollectionReference tasks = await instance.tasks;
+  Stream<QuerySnapshot<Object?>> getGalleryStream() async* {
+    CollectionReference gallery = await instance.gallery;
 
-    await tasks.add({"userID": uid, "taskLink": 'N/A',
-                     "description": description, 
-                     "isDone": false, "dayOfWeek": "Monday",
-                     "startTime" : "01:00 AM",
-                     "endTime" : "04:00 PM"});
-  }
-
-  Future<void> addNestedTask(String description, String taskid) async {
-    CollectionReference tasks = await instance.tasks;
-
-    await tasks.add({"userID": 'N/A', "taskLink": taskid,
-                     "description": description, 
-                     "isDone": false, "dayOfWeek": "Monday",
-                     "startTime" : "01:00 AM",
-                     "endTime" : "04:00 PM"});
-  }
-
-  Stream<QuerySnapshot<Object?>> getSnapshots() async* {
-    CollectionReference tasks = await instance.tasks;
-
-    Stream<QuerySnapshot<Object?>> snapshots = tasks.snapshots();
+    Stream<QuerySnapshot<Object?>> snapshots = gallery.snapshots();
 
     yield* snapshots;
   }
 
+  Stream<QuerySnapshot<Object?>> getCommentStream(String imgID) async* {
+    CollectionReference comments = await instance.gallery;
+
+    Stream<QuerySnapshot<Object?>> snapshots = comments.where('imageID', isEqualTo:imgID).snapshots();
+
+    yield* snapshots;
+  }
+
+  Future<void> addUser(String uid, String username) async {
+    CollectionReference users = await instance.users;
+
+    await users.add({"userID": uid, "username": username});
+  }
+
+  Future<String> getUsername(String uid) async {
+    CollectionReference users = await instance.users;
+
+    var query = users.where('userID', isEqualTo:uid);
+    String username = '';
+
+    await query.get().then((QuerySnapshot snapshot) {
+      username = snapshot.docs.first['username'];
+    });
+    
+    return username;
+  }
+
+  /*
   Future<void> updateTaskTime(String? id, String dayOfWeek, String startTime, String endTime) async {
     CollectionReference tasks = await instance.tasks;
 
@@ -135,4 +156,6 @@ class StoreService {
       );
     */
   }
+
+  */
 }

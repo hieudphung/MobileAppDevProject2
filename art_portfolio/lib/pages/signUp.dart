@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../database/StoreService.dart';
+import '../database/galleryStoreService.dart';
 
 class SignupPage extends StatelessWidget {
   const SignupPage({super.key});
@@ -26,6 +26,7 @@ class SignupBody extends StatefulWidget {
 
 class _SignupBodyState extends State<SignupBody> {
   String newEmail = '';
+  String newUser = '';
   String newPassword = '';
   String verifyPassword = '';
   int errorFlag = 0;
@@ -54,7 +55,8 @@ class _SignupBodyState extends State<SignupBody> {
           isCreated = true;
 
           //Create new user id in users database
-          StoreService.instance.addUser(cred.user!.uid);
+          await GalleryStoreService.instance.addUser(cred.user!.uid, newUser);
+          
         } on FirebaseAuthException catch (e) {
           if (e.code == 'weak-password') {
             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('The password provided is too weak.')));
@@ -69,6 +71,7 @@ class _SignupBodyState extends State<SignupBody> {
         }
 
         newEmail = '';
+        newUser = '';
         newPassword = '';
         verifyPassword = '';
 
@@ -81,6 +84,10 @@ class _SignupBodyState extends State<SignupBody> {
 
   void setNewEmail(String formValue) {
     newEmail = formValue;
+  }
+
+  void setNewUser(String formValue) {
+    newUser = formValue;
   }
 
   void setNewPassword(String formValue) {
@@ -127,6 +134,28 @@ class _SignupBodyState extends State<SignupBody> {
                   } else {
                     //_submitLogin(value);
                     setNewEmail(value);
+                  }
+                  return null;
+                },
+              ),
+            )
+          ),
+          Expanded(
+            flex: 1,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(15, 0, 15, 5),
+              child: TextFormField(
+                decoration: const InputDecoration(
+                  border: UnderlineInputBorder(),
+                  hintText: 'New User',
+                ),
+                obscureText: true,
+                validator: (value){
+                  if (value == null || value.isEmpty) {
+                    return 'User empty!';
+                  } else {
+                    //_submitSignup(value);
+                    setNewUser(value);
                   }
                   return null;
                 },

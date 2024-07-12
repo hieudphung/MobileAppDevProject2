@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import '../database/galleryStoreService.dart';
 
 class userBar extends StatelessWidget{
   userBar({super.key});
@@ -9,12 +10,14 @@ class userBar extends StatelessWidget{
     await FirebaseAuth.instance.signOut();
   }
 
-  String getDisplayName() {
+  Future<String> getDisplayName() async {
     User? user = FirebaseAuth.instance.currentUser;
     String displayToReturn = 'N/A';
 
+    //Get username from database
     if (user != null) {
-      displayToReturn = user.email!; // <-- Their email
+      displayToReturn = user.uid;
+      displayToReturn = await GalleryStoreService.instance.getUsername(user.uid);
     }
 
     return displayToReturn;
@@ -39,7 +42,16 @@ class userBar extends StatelessWidget{
           ),
           Expanded(
             flex: 2,
-            child: Text('Logged in as: ${getDisplayName()}'),
+            child: FutureBuilder <String> (
+              future: getDisplayName(),
+              builder: (BuildContext context, AsyncSnapshot<String> name) {
+                if (name.hasData) {
+                  return Text('Logged in as: ${name.data!}');
+                }
+                
+                return const Text('Loading...');
+              }
+            )
           ),
         ],
       )

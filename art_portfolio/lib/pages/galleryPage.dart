@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
-import '../database/storeService.dart';
+import '../database/galleryStoreService.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:firebase_auth/firebase_auth.dart';
 
-import '../widgets/taskCard.dart';
-import '../widgets/taskForm.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+
+import '../widgets/galleryItem.dart';
 import '../widgets/userBar.dart';
+
+import '../model/galleryImage.dart';
 
 class GalleryPage extends StatelessWidget {
   const GalleryPage({super.key});
@@ -21,18 +24,10 @@ class GalleryPage extends StatelessWidget {
       child: userBar(),
     ),
     const Expanded(
-        flex: 7,
+        flex: 8,
         child: 
           ListOfStuff(),
         ),
-    const Flexible(
-      flex: 1,
-      child: SizedBox(height: 1),
-    ),
-    Align(
-      alignment: Alignment.bottomCenter,
-      child: taskForm(),
-    ),
       ],
     );
   }
@@ -41,56 +36,46 @@ class GalleryPage extends StatelessWidget {
 class ListOfStuff extends StatelessWidget {
   const ListOfStuff ({super.key});
 
+  @override
   Widget build(BuildContext context) {
-    String uid = FirebaseAuth.instance.currentUser!.uid;
-
+    //String uid = FirebaseAuth.instance.currentUser!.uid;
+    
     return StreamBuilder(
-        stream: StoreService.instance.getSnapshots(),
+        stream: GalleryStoreService.instance.getGalleryStream(),
         builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
           if (streamSnapshot.hasData) {
+            //streamSnapshot.data!;
 
             int docSize = streamSnapshot.data!.docs.length;
-            int actualCount = 0;
+            
+            List<GalleryImage> galleryImages = List.empty(growable: true);
 
             for (int i = 0; i < docSize; i++) {
-              if (streamSnapshot.data!.docs[i]['userID'] == uid) {
-                actualCount = actualCount + 1;
-              }
+              final DocumentSnapshot documentSnapshot =
+                    streamSnapshot.data!.docs[i];
+
+              galleryImages.add(GalleryImage(imageID: documentSnapshot.id,
+                                             userID: documentSnapshot['userID'], 
+                                             src: documentSnapshot['src'],
+                                             imageName: documentSnapshot['imageName'],
+                                             description: documentSnapshot['description']));
             }
 
-            if (docSize > 0 && actualCount > 0) {
+            //docsize the same as gallery images size
+            if (galleryImages.isNotEmpty) {
               //FIGURE OUT LAST STUFF:
               //ADDING THE SECONDARY LIST
-
-              int actualIndex = 0;
-
-                return ListView.builder(
-                  itemCount: docSize,
+                return MasonryGridView.count(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 2,
+                  crossAxisSpacing: 2,
+                  itemCount: galleryImages.length,
                   itemBuilder: (context, index) {
-
-                    final DocumentSnapshot documentSnapshot =
-                    streamSnapshot.data!.docs[index];
-
-                    if (documentSnapshot['userID'] == uid) {
-                      actualIndex = actualIndex + 1;
-
-                      return taskCard(id: documentSnapshot.id, index: actualIndex,
-                                      description: documentSnapshot['description'],
-                                      isDone: documentSnapshot['isDone'],
-                                      day: documentSnapshot['dayOfWeek'],
-                                      startTime: documentSnapshot['startTime'],
-                                      endTime: documentSnapshot['endTime']);
-                    } else {
-                      return Container();
-                    }
-                  },
+                    return GalleryItem(index: index, galleryImage: galleryImages[index]);
+                }
               );
-
             } else {
-              return const Align(
-                alignment: Alignment.center,
-                child: Text("No items here!"),
-              );
+              return const Text("No images here!");
             }
           }
 
@@ -99,6 +84,7 @@ class ListOfStuff extends StatelessWidget {
           );
         },
     );
+    
   }
 }
 
