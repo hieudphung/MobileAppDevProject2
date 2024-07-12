@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../model/user.dart';
+
 // Initialize Cloud Firestore and get a reference to the service
 //const db = Firestore.getFirestore(app);
 
@@ -57,10 +59,16 @@ class GalleryStoreService {
     yield* snapshots;
   }
 
-  Stream<QuerySnapshot<Object?>> getCommentStream(String imgID) async* {
-    CollectionReference comments = await instance.gallery;
+  Future<void> addComment(String uid, String imageID, String comment) async {
+    CollectionReference comments = await instance.comments;
 
-    Stream<QuerySnapshot<Object?>> snapshots = comments.where('imageID', isEqualTo:imgID).snapshots();
+    await comments.add({"userID": uid, "imageID": imageID, "comment": comment});
+  }
+  
+  Stream<QuerySnapshot<Object?>> getCommentStream(String imgID) async* {
+    CollectionReference comments = await instance.comments;
+    
+    Stream<QuerySnapshot<Object?>> snapshots = comments.where('imageID', isEqualTo: imgID).snapshots();
 
     yield* snapshots;
   }
@@ -70,19 +78,27 @@ class GalleryStoreService {
 
     await users.add({"userID": uid, "username": username});
   }
-
-  Future<String> getUsername(String uid) async {
+  
+  Future<UserGalleryInfo> getUser(String uid) async {
     CollectionReference users = await instance.users;
 
     var query = users.where('userID', isEqualTo:uid);
+
+    String returnID = '';
     String username = '';
+    String avatarSrc = '';
 
     await query.get().then((QuerySnapshot snapshot) {
+      returnID = snapshot.docs.first.id;
       username = snapshot.docs.first['username'];
+      //avatarSrc = snapshot.docs.first['avatarImg'];
     });
+
+    UserGalleryInfo userToReturn = UserGalleryInfo(id: returnID, username: username, avatar: avatarSrc);
     
-    return username;
+    return userToReturn;
   }
+  
 
   /*
   Future<void> updateTaskTime(String? id, String dayOfWeek, String startTime, String endTime) async {

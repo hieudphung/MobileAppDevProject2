@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../model/user.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import '../database/galleryStoreService.dart';
 
@@ -12,15 +14,14 @@ class userBar extends StatelessWidget{
 
   Future<String> getDisplayName() async {
     User? user = FirebaseAuth.instance.currentUser;
-    String displayToReturn = 'N/A';
+    UserGalleryInfo displayToReturn = UserGalleryInfo(id: '', avatar: '', username: 'n/a');
 
     //Get username from database
     if (user != null) {
-      displayToReturn = user.uid;
-      displayToReturn = await GalleryStoreService.instance.getUsername(user.uid);
+      displayToReturn = await GalleryStoreService.instance.getUser(user.uid);
     }
 
-    return displayToReturn;
+    return displayToReturn.username;
   }
   
   @override

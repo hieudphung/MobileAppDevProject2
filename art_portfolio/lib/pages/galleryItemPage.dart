@@ -41,9 +41,9 @@ class GalleryItemBody extends StatelessWidget {
       alignment: Alignment.topCenter,
       child: userBar(),
     ),
-    Expanded(child: ItemImage(imageSrc: src),),
+    Expanded(flex: 2, child: ItemImage(imageSrc: src),),
     Expanded(child: DescriptionBox(imageDescription: description)),
-    Expanded(child: CommentForm(imageID: imageID)),
+    Flexible(child: CommentForm(imageID: imageID)),
     Expanded(child: CommentBox(imageID: imageID)),
       ],
     );
