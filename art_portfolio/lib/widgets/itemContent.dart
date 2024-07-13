@@ -41,13 +41,58 @@ class SetButtons extends StatelessWidget {
   const SetButtons({super.key,
   required this.imageID,
   required this.creatorID,
+  required this.oldTitle,
+  required this.oldDescription
   });
 
   final String imageID;
   final String creatorID;
 
-  void showImageEditDialog(BuildContext context) {
+  final String oldTitle;
+  final String oldDescription;
 
+  void showImageEditDialog(BuildContext context) {
+    //For holding data from form
+    Map data = {};
+    void saveData(String formField, dynamic formInput){data[formField] = formInput;}
+
+    //For sending to database
+    Future<void> updateImage(bool validate, String title, String description) async {
+      if (validate) {
+        await GalleryStoreService.instance.updateImageDetails(imageID, title, description);
+      }
+        
+    }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Edit Image Details'),
+          content: ImageEditDetailForm(keepingData: saveData, oldTitle: oldTitle, oldDescription: oldDescription),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+
+                //goalFromForm = emptyGoal;
+              },
+            ),
+            TextButton(
+              child: const Text('Post'),
+              onPressed: () async {
+                // Adding to provider
+                updateImage(data['validated'], data['title'], data['description']);
+
+                // Handle adding new goal
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -73,6 +118,108 @@ class SetButtons extends StatelessWidget {
                     children: <Widget>[
                       FavoriteCount(imageID: imageID),
                     ],);
+  }
+}
+
+class ImageEditDetailForm extends StatefulWidget {
+  const ImageEditDetailForm({super.key,
+  required this.keepingData,
+  required this.oldTitle,
+  required this.oldDescription});
+
+  final Function keepingData;
+  final String oldTitle;
+  final String oldDescription;
+
+  @override
+  State<ImageEditDetailForm> createState() => _ImageEditDetailFormState();
+}
+
+class _ImageEditDetailFormState extends State<ImageEditDetailForm> {
+  final _formKey = GlobalKey<FormState>();
+  bool validated = false;
+  
+  String _title = '';
+  String _description = '';
+
+  void validate() {
+    if (_title.isEmpty || _description.isEmpty) {
+      validated = false;
+    } else {
+      validated = true;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _title = widget.oldTitle;
+    _description = widget.oldDescription;
+
+    widget.keepingData('validated', validated);
+    widget.keepingData('title', _title);
+    widget.keepingData('description', _description);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          SizedBox(
+            width: 600,
+            child: TextFormField(
+              decoration: const InputDecoration(
+                labelText: 'Set the Title'
+              ),
+
+              maxLines: 1,
+              minLines: 1,
+
+              initialValue: widget.oldTitle,
+
+              onChanged: (value) {
+                _title = value;
+
+                validate();
+
+                setState(() {
+                  widget.keepingData('validated', validated);
+                  widget.keepingData('title', _title);
+                  });
+              },
+            ),
+          ),
+          SizedBox(
+            width: 600,
+            child: TextFormField(
+              decoration: const InputDecoration(
+                labelText: 'Set the Description'
+              ),
+
+              maxLines: 6,
+              minLines: 1,
+
+              initialValue: widget.oldDescription,
+
+              onChanged: (value) {
+                _description = value;
+
+                validate();
+
+                setState(() {
+                  widget.keepingData('validated', validated);
+                  widget.keepingData('description', _description);
+                  });
+              },
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 

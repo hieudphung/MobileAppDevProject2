@@ -72,6 +72,15 @@ class GalleryStoreService {
     yield* snapshots;
   }
 
+  Future<void> updateImageDetails(String imageID, String title, String description) async {
+    CollectionReference gallery = await instance.gallery;
+
+    await gallery.doc(imageID).update({
+      "imageName" : title,
+      "description" : description
+    });
+  }
+
   Future<void> addComment(String uid, String imageID, String comment) async {
     CollectionReference comments = await instance.comments;
 

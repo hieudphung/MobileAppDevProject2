@@ -19,6 +19,7 @@ class GalleryItemPage extends StatelessWidget {
                            backgroundColor: const Color.fromARGB(255, 79, 255, 240)),
             body: GalleryItemBody(imageID: galleryItem.imageID, 
                                   src: galleryItem.src, 
+                                  title: galleryItem.imageName,
                                   description: galleryItem.description,
                                   creatorID: galleryItem.userID));
   }
@@ -28,12 +29,14 @@ class GalleryItemBody extends StatelessWidget {
   const GalleryItemBody({super.key,
   required this.imageID,
   required this.src,
+  required this.title,
   required this.description,
   required this.creatorID
   });
 
   final String imageID;
   final String src;
+  final String title;
   final String description;
   final String creatorID;
 
@@ -47,7 +50,7 @@ class GalleryItemBody extends StatelessWidget {
       child: userBar(),
     ),
     Expanded(flex: 2, child: ItemImage(imageSrc: src),),
-    Flexible(child: SetButtons(imageID: imageID, creatorID: creatorID)),
+    Flexible(child: SetButtons(imageID: imageID, creatorID: creatorID, oldTitle: title, oldDescription: description)),
     Flexible(child: DescriptionBox(imageDescription: description)),
     Flexible(child: CommentForm(imageID: imageID)),
     Expanded(child: CommentBox(imageID: imageID, creatorID: creatorID)),

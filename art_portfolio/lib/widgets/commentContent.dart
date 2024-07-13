@@ -20,10 +20,12 @@ class CommentForm extends StatelessWidget {
     void saveData(String formField, dynamic formInput){data[formField] = formInput;}
 
     //For sending to database
-    Future<void> postComment(String comment) async {
+    Future<void> postComment(bool validate, String comment) async {
       User user = FirebaseAuth.instance.currentUser!;
 
-      await GalleryStoreService.instance.addComment(user.uid, imageID, comment);
+      if (validate) {
+        await GalleryStoreService.instance.addComment(user.uid, imageID, comment);
+      }
     }
 
     showDialog(
@@ -45,7 +47,7 @@ class CommentForm extends StatelessWidget {
               child: const Text('Post'),
               onPressed: () async {
                 // Adding to provider
-                postComment(data['comment']);
+                postComment(data['validated'], data['comment']);
 
                 // Handle adding new goal
                 Navigator.of(context).pop();
@@ -81,10 +83,10 @@ class CommentPostForm extends StatefulWidget {
   final String oldText;
 
   @override
-  State<CommentPostForm> createState() => _AddGoalFormState();
+  State<CommentPostForm> createState() => _CommentPostState();
 }
 
-class _AddGoalFormState extends State<CommentPostForm> {
+class _CommentPostState extends State<CommentPostForm> {
   final _formKey = GlobalKey<FormState>();
   bool validated = false;
   
