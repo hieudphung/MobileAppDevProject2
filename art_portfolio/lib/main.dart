@@ -1,3 +1,4 @@
+import 'package:art_portfolio/pages/userPage.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -6,7 +7,9 @@ import 'firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'pages/portfolioLogin.dart';
+
 import 'pages/galleryPage.dart';
+import 'pages/userPage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -64,7 +67,7 @@ class TaskLoginPage extends StatelessWidget {
 
           //Go to landing page if logged in
           //Can replace gallery page with anything else to get to landing w/ menu bar
-          return const GalleryPage();
+          return const UserPage(userID: '');
         }
     );
   }

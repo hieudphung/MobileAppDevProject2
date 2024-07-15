@@ -14,7 +14,7 @@ class userBar extends StatelessWidget{
 
   Future<String> getDisplayName() async {
     User? user = FirebaseAuth.instance.currentUser;
-    UserGalleryInfo displayToReturn = UserGalleryInfo(id: '', avatar: '', username: 'n/a');
+    UserGalleryInfo displayToReturn = UserGalleryInfo(id: '', avatar: '', description: '', username: 'n/a');
 
     //Get username from database
     if (user != null) {

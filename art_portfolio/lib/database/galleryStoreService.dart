@@ -12,12 +12,14 @@ class GalleryStoreService {
   static CollectionReference? _comments;
   static CollectionReference? _users;
   static CollectionReference? _favorites;
+  static CollectionReference? _friends;
 
   GalleryStoreService._init(){
     _gallery = FirebaseFirestore.instance.collection('gallery');
     _comments = FirebaseFirestore.instance.collection('comments');
     _users = FirebaseFirestore.instance.collection('users');
     _favorites = FirebaseFirestore.instance.collection('favorites');
+    _friends = FirebaseFirestore.instance.collection('friends');
   }
 
   Future<CollectionReference> get gallery async {
@@ -64,10 +66,29 @@ class GalleryStoreService {
     _users = FirebaseFirestore.instance.collection('favorites');
   }
 
+  Future<CollectionReference> get friends async {
+    if (_friends != null) return _friends!;
+
+    _friends = await _getFriends();
+    return _friends!;
+  }
+
+  Future _getFriends() async {
+    _users = FirebaseFirestore.instance.collection('friends');
+  }
+
   Stream<QuerySnapshot<Object?>> getGalleryStream() async* {
     CollectionReference gallery = await instance.gallery;
 
     Stream<QuerySnapshot<Object?>> snapshots = gallery.snapshots();
+
+    yield* snapshots;
+  }
+
+  Stream<QuerySnapshot<Object?>> getUserGalleryStream(String uid) async* {
+    CollectionReference gallery = await instance.gallery;
+
+    Stream<QuerySnapshot<Object?>> snapshots = gallery.where('userID', isEqualTo: uid).snapshots();
 
     yield* snapshots;
   }
@@ -143,18 +164,38 @@ class GalleryStoreService {
     String returnID = '';
     String username = '';
     String avatarSrc = '';
+    String description = '';
 
     await query.get().then((QuerySnapshot snapshot) {
       returnID = snapshot.docs.first.id;
       username = snapshot.docs.first['username'];
-      //avatarSrc = snapshot.docs.first['avatarImg'];
+      avatarSrc = snapshot.docs.first['avatarSrc'];
+      description = snapshot.docs.first['about'];
     });
 
-    UserGalleryInfo userToReturn = UserGalleryInfo(id: returnID, username: username, avatar: avatarSrc);
+    UserGalleryInfo userToReturn = UserGalleryInfo(id: returnID, username: username, avatar: avatarSrc, description: description);
     
     return userToReturn;
   }
+
+  Stream<QuerySnapshot<Object?>> getUserStream(String uid) async* {
+    CollectionReference users = await instance.users;
+
+    //should only return one, so taking first either way
+    Stream<QuerySnapshot<Object?>> snapshots = users.where('userID', isEqualTo:uid).snapshots();
+
+    yield* snapshots;
+  }
   
+  Stream<QuerySnapshot<Object?>> getUserFriends(String uid) async* {
+    CollectionReference friends = await instance.friends;
+
+    print(uid);
+    
+    Stream<QuerySnapshot<Object?>> snapshots = friends.where('link', arrayContainsAny: [uid]).snapshots();
+
+    yield* snapshots;
+  }
 
   /*
   Future<void> updateTaskTime(String? id, String dayOfWeek, String startTime, String endTime) async {
