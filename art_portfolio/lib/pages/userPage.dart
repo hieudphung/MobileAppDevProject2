@@ -1,9 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../database/galleryStoreService.dart';
 
 import '../widgets/userItem.dart';
-
 import '../widgets/userBar.dart';
 
 class UserPage extends StatelessWidget {

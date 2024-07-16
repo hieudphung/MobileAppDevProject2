@@ -178,6 +178,21 @@ class GalleryStoreService {
     return userToReturn;
   }
 
+  Future<void> updateUserDetails(String uid, String newAbout) async {
+    CollectionReference users = await instance.users;
+
+    print('updating...');
+
+    //should only return one, so taking first either way
+    var userSearch = users.where('userID', isEqualTo:uid);
+
+    await userSearch.get().then((snapshot) async => {
+      await snapshot.docs.first.reference.update({
+          "about": newAbout
+      })
+    },);
+  }
+
   Stream<QuerySnapshot<Object?>> getUserStream(String uid) async* {
     CollectionReference users = await instance.users;
 

@@ -11,21 +11,20 @@ class UserCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder <UserGalleryInfo>(
-        future: GalleryStoreService.instance.getUser(userID),
-        builder: (context, AsyncSnapshot<UserGalleryInfo> snapshot) {
-          if (snapshot.hasData) {
+    return StreamBuilder(
+        stream: GalleryStoreService.instance.getUserStream(userID),
+        builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+          if (streamSnapshot.hasData) {
             //streamSnapshot.data!;
-
             
-            if (snapshot.data != null) {
+            if (streamSnapshot.data != null) {
               //FIGURE OUT LAST STUFF:
               //ADDING THE SECONDARY LIST
                 return Column(
                 children: 
                 <Widget>[
-                  UserName(name: snapshot.data!.username, avatarLink: snapshot.data!.avatar),
-                  UserAbout(description: snapshot.data!.description),
+                  UserName(name: streamSnapshot.data!.docs[0]['username'], avatarLink: streamSnapshot.data!.docs[0]['avatarSrc']),
+                  UserAbout(description: streamSnapshot.data!.docs[0]['about']),
                 ],
               );
             } else {
@@ -94,17 +93,158 @@ class UserEdit extends StatelessWidget {
 
   final String userID;
 
+  void showUserEditDialog(BuildContext context, String description) {
+    //For holding data from form
+    Map data = {};
+    void saveData(String formField, dynamic formInput){data[formField] = formInput;}
+
+    //For sending to database
+    Future<void> updateUser(bool validate, String newDescription) async {
+      if (validate) {
+        await GalleryStoreService.instance.updateUserDetails(userID, newDescription);
+      }
+    }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Edit Profile'),
+          content: UserEditForm(keepingData: saveData, oldDescription: description),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+
+                //goalFromForm = emptyGoal;
+              },
+            ),
+            TextButton(
+              child: const Text('Update'),
+              onPressed: () async {
+                // Adding to provider
+                updateUser(data['validated'], data['description']);
+
+                // Handle adding new goal
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0), 
-      child: Align(
-        alignment: Alignment.bottomRight,
-        child: IconButton(
-          icon: const Icon(Icons.edit),
-          onPressed: () {},
-        )
-      )
+    return FutureBuilder(
+      future: GalleryStoreService.instance.getUser(userID),
+        builder: (context, AsyncSnapshot<UserGalleryInfo> snapshot) {
+          if (snapshot.hasData) {
+            //streamSnapshot.data!;
+
+            if (snapshot.data != null) {
+              //FIGURE OUT LAST STUFF:
+              //ADDING THE SECONDARY LIST
+              return Padding(
+                      padding: const EdgeInsets.all(8.0), 
+                      child: Align(
+                        alignment: Alignment.bottomRight,
+                        child: IconButton(
+                          icon: const Icon(Icons.edit),
+                          onPressed: () => showUserEditDialog(context, snapshot.data!.description)
+                        )
+                      )
+                    );
+            }
+          }
+
+          return Padding(
+                      padding: const EdgeInsets.all(8.0), 
+                      child: Align(
+                        alignment: Alignment.bottomRight,
+                        child: IconButton(
+                          icon: const Icon(Icons.edit),
+                          onPressed: () => {}
+                        )
+                      )
+                    );
+      }
+    );
+  }
+}
+
+class UserEditForm extends StatefulWidget {
+  const UserEditForm({super.key,
+  required this.keepingData,
+  required this.oldDescription});
+
+  final Function keepingData;
+  final String oldDescription;
+
+  @override
+  State<UserEditForm> createState() => _UserEditDetailFormState();
+}
+
+class _UserEditDetailFormState extends State<UserEditForm> {
+  final _formKey = GlobalKey<FormState>();
+  bool validated = false;
+
+  String _description = '';
+
+  void validate() {
+    if (_description.isEmpty) {
+      validated = false;
+    } else {
+      validated = true;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _description = widget.oldDescription;
+
+    widget.keepingData('validated', validated);
+    widget.keepingData('description', _description);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          SizedBox(
+            width: 600,
+            child: TextFormField(
+              decoration: const InputDecoration(
+                labelText: 'Set the About'
+              ),
+
+              maxLines: 6,
+              minLines: 1,
+
+              initialValue: widget.oldDescription,
+
+              onChanged: (value) {
+                _description = value;
+
+                validate();
+
+                setState(() {
+                  widget.keepingData('validated', validated);
+                  widget.keepingData('description', _description);
+                  }
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

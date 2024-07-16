@@ -62,7 +62,6 @@ class TaskLoginPage extends StatelessWidget {
 
           if (!streamSnapshot.hasData) {
             return PortfolioLogin();
-            
           }
 
           //Go to landing page if logged in
