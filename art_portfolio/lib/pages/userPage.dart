@@ -1,8 +1,36 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../widgets/friendContent.dart';
 import '../widgets/userItem.dart';
 import '../widgets/userBar.dart';
+
+class UserPageMaterial extends StatelessWidget {
+  const UserPageMaterial({super.key,
+  required this.userID});
+
+  final String userID;
+  
+  @override
+  Widget build(BuildContext context) {
+    const titleText = "Mobile App Final";
+    const appBarText = "Portfolio Post";
+
+    return MaterialApp(
+      title: titleText,
+      theme: ThemeData(
+        primaryColor: const Color.fromARGB(255, 24, 132, 255),
+        colorScheme: ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 24, 132, 255),
+                                          brightness: Brightness.light,),
+        useMaterial3: true,
+      ),
+      home: Scaffold(
+            appBar: AppBar(title: const Text(appBarText),
+                           backgroundColor: Colors.indigo[100]),
+            body: UserPage(userID: userID)),
+    );
+  }
+}
 
 class UserPage extends StatelessWidget {
   const UserPage({super.key,
@@ -69,7 +97,7 @@ class UserFriends extends StatelessWidget {
       child: Column(
         children: <Widget>[
           const Text('Friends'),
-          Expanded(child: UserFriendsList(userID: userID)),
+          Expanded(child: UserFriendsList(userID: userID, limitedDisplay: true)),
           MoreFriends(userID: userID)
         ]
       )

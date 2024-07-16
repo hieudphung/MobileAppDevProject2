@@ -13,6 +13,8 @@ class GalleryStoreService {
   static CollectionReference? _users;
   static CollectionReference? _favorites;
   static CollectionReference? _friends;
+  static CollectionReference? _friendRequests;
+  static CollectionReference? _messages;
 
   GalleryStoreService._init(){
     _gallery = FirebaseFirestore.instance.collection('gallery');
@@ -20,6 +22,7 @@ class GalleryStoreService {
     _users = FirebaseFirestore.instance.collection('users');
     _favorites = FirebaseFirestore.instance.collection('favorites');
     _friends = FirebaseFirestore.instance.collection('friends');
+    _friendRequests = FirebaseFirestore.instance.collection('friendRequests');
   }
 
   Future<CollectionReference> get gallery async {
@@ -63,7 +66,7 @@ class GalleryStoreService {
   }
 
   Future _getFavorites() async {
-    _users = FirebaseFirestore.instance.collection('favorites');
+    _favorites = FirebaseFirestore.instance.collection('favorites');
   }
 
   Future<CollectionReference> get friends async {
@@ -74,7 +77,18 @@ class GalleryStoreService {
   }
 
   Future _getFriends() async {
-    _users = FirebaseFirestore.instance.collection('friends');
+    _friends = FirebaseFirestore.instance.collection('friends');
+  }
+
+  Future<CollectionReference> get friendRequests async {
+    if (_friendRequests != null) return _friendRequests!;
+
+    _friendRequests = await _getFriendRequests();
+    return _friendRequests!;
+  }
+
+  Future _getFriendRequests() async {
+    _friendRequests = FirebaseFirestore.instance.collection('friendRequests');
   }
 
   Stream<QuerySnapshot<Object?>> getGalleryStream() async* {
@@ -162,9 +176,9 @@ class GalleryStoreService {
     var query = users.where('userID', isEqualTo:uid);
 
     String returnID = '';
-    String username = '';
+    String username = 'Invalid User';
     String avatarSrc = '';
-    String description = '';
+    String description = 'This user doesn\'t exist!';
 
     await query.get().then((QuerySnapshot snapshot) {
       returnID = snapshot.docs.first.id;
@@ -181,7 +195,7 @@ class GalleryStoreService {
   Future<void> updateUserDetails(String uid, String newAbout) async {
     CollectionReference users = await instance.users;
 
-    print('updating...');
+    //print('updating...');
 
     //should only return one, so taking first either way
     var userSearch = users.where('userID', isEqualTo:uid);
@@ -205,9 +219,24 @@ class GalleryStoreService {
   Stream<QuerySnapshot<Object?>> getUserFriends(String uid) async* {
     CollectionReference friends = await instance.friends;
 
-    print(uid);
+    //print(uid);
     
     Stream<QuerySnapshot<Object?>> snapshots = friends.where('link', arrayContainsAny: [uid]).snapshots();
+
+    yield* snapshots;
+  }
+
+  Stream<QuerySnapshot<Object?>> getFriendRequests(String uid) async* {
+    CollectionReference friendRequests = await instance.friendRequests;
+
+    //print(uid);
+
+    //as long as friend request mentions user ID in either 
+    Stream<QuerySnapshot<Object?>> snapshots = friendRequests.where(
+    Filter.or(
+      Filter("recipient", isEqualTo: uid),
+      Filter("requestee", isEqualTo: uid)
+    )).snapshots();
 
     yield* snapshots;
   }

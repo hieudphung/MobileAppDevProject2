@@ -99,9 +99,8 @@ class GalleryAndSearchState extends State<GalleryAndSearch> {
                 ),
               ]
             )
-          )
-        
-        ,),
+          ),
+        ),
         Expanded(child: GalleryList(searchString: searchItem)),
       ],
     );
