@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -25,6 +26,7 @@ class UserPageMaterial extends StatelessWidget {
         useMaterial3: true,
       ),
       home: Scaffold(
+            resizeToAvoidBottomInset : false,
             appBar: AppBar(title: const Text(appBarText),
                            backgroundColor: Colors.indigo[100]),
             body: UserPage(userID: userID)),
@@ -53,19 +55,24 @@ class UserPage extends StatelessWidget {
       child: userBar(),
     ),
     Expanded(
-        flex: 1,
+        flex: 2,
         child: 
           UserCard(userID: idToUse)
         ),
      Expanded(
-        flex: 1,
+        flex: 3,
+        child: 
+          Row(
+            children: <Widget> [
+              Expanded(child: UserUploads(userID: idToUse)),
+              Expanded(child: UserFavorites(userID: idToUse)),
+            ]
+          ),
+        ),
+      Expanded(
+        flex: 2,
         child: 
           UserFriends(userID: idToUse)
-        ),
-     Expanded(
-        flex: 1,
-        child: 
-          UserUploads(userID: idToUse)
         ),
       Expanded(
         flex: 1,
@@ -97,7 +104,8 @@ class UserFriends extends StatelessWidget {
       child: Column(
         children: <Widget>[
           const Text('Friends'),
-          Expanded(child: UserFriendsList(userID: userID, limitedDisplay: true)),
+          //the isUser parameter doesn't matter here
+          Expanded(child: UserFriendsList(userID: userID, limitedDisplay: true, isUser: false)),
           MoreFriends(userID: userID)
         ]
       )
@@ -114,45 +122,36 @@ class UserUploads extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return Container();
-  }
-  /*
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder(
-        stream: GalleryStoreService.instance.getUserGalleryStream(userID),
-        builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-          if (streamSnapshot.hasData) {
-            //streamSnapshot.data!;
-
-            int docSize = streamSnapshot.data!.docs.length;
-            
-            if (docSize > 0) {
-              final DocumentSnapshot documentSnapshot =
-                      streamSnapshot.data!.docs[i];
-
-              //FIGURE OUT LAST STUFF:
-              //ADDING THE SECONDARY LIST
-                return MasonryGridView.count(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 2,
-                  crossAxisSpacing: 2,
-                  itemCount: galleryImages.length,
-                  itemBuilder: (context, index) {
-                    return GalleryItem(index: index, galleryImage: galleryImages[index]);
-                }
-              );
-            } else {
-              return const Text("No images uploaded!");
-            }
-          }
-
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        },
+    return Card(
+      child: Column(
+        children: <Widget>[
+          const Text('Uploads'),
+          Expanded(child: UserUploadsList(userID: userID, limitedDisplay: true)),
+          MoreUploads(userID: userID)
+        ]
+      )
     );
   }
-  */
 }
+
+class UserFavorites extends StatelessWidget {
+  const UserFavorites ({super.key,
+  required this.userID,
+  });
+
+  final String userID;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Column(
+        children: <Widget>[
+          const Text('Favorites'),
+          Expanded(child: FavoritesList(userID: userID, limitedDisplay: true)),
+          MoreFavorites(userID: userID)
+        ]
+      )
+    );
+  }
+}
+

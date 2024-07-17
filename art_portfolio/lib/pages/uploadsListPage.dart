@@ -21,15 +21,15 @@ class FriendsListPage extends StatelessWidget {
                            backgroundColor: const Color.fromARGB(255, 79, 255, 240),
                            bottom: const TabBar(
                             tabs: [
-                              Tab(child: Text('Friends')),
-                              Tab(child: Text('Requests')),
+                              Tab(child: Text('Uploads')),
+                              Tab(child: Text('New Upload')),
                             ],
                           ),
             ),
             body: TabBarView(
                   children: [
-                    FriendsListBody(userID: userID, isUser: true),
-                    RequestListBody(userID: userID)
+                    UploadsListBody(userID: userID, isUser: true),
+                    UploadFormBody(userID: userID)
                   ]
             )
       ),
@@ -41,13 +41,13 @@ class FriendsListPage extends StatelessWidget {
                            backgroundColor: const Color.fromARGB(255, 79, 255, 240),
                            bottom: const TabBar(
                             tabs: [
-                              Tab(child: Text('Friends'))
+                              Tab(child: Text('Uploads'))
                             ],
                           ),
             ),
             body: TabBarView(
                   children: [
-                    FriendsListBody(userID: userID, isUser: false)
+                    UploadsListBody(userID: userID, isUser: false)
                   ]
             )
       ),
@@ -56,8 +56,8 @@ class FriendsListPage extends StatelessWidget {
   }
 }
 
-class FriendsListBody extends StatelessWidget {
-  const FriendsListBody({super.key,
+class UploadsListBody extends StatelessWidget {
+  const UploadsListBody({super.key,
   required this.userID,
   required this.isUser
   });
@@ -70,14 +70,14 @@ class FriendsListBody extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-      Expanded(flex: 2, child: UserFriendsList(userID: userID, limitedDisplay: false, isUser: isUser),),
+      Expanded(flex: 2, child: UserUploadsList(userID: userID, limitedDisplay: false, isUser: isUser),),
       ],
     );
   }
 }
 
-class RequestListBody extends StatelessWidget {
-  const RequestListBody({super.key,
+class UploadFormBody extends StatelessWidget {
+  const UploadFormBody({super.key,
   required this.userID,
   });
 
@@ -88,7 +88,7 @@ class RequestListBody extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-      Expanded(flex: 2, child: FriendRequestList(userID: userID),),
+      Expanded(flex: 2, child: UploadForm(userID: userID),),
       ],
     );
   }

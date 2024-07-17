@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../model/galleryImage.dart';
 import '../model/user.dart';
 
 // Initialize Cloud Firestore and get a reference to the service
@@ -23,6 +24,7 @@ class GalleryStoreService {
     _favorites = FirebaseFirestore.instance.collection('favorites');
     _friends = FirebaseFirestore.instance.collection('friends');
     _friendRequests = FirebaseFirestore.instance.collection('friendRequests');
+    _messages = FirebaseFirestore.instance.collection('messages');
   }
 
   Future<CollectionReference> get gallery async {
@@ -91,6 +93,40 @@ class GalleryStoreService {
     _friendRequests = FirebaseFirestore.instance.collection('friendRequests');
   }
 
+  Future<CollectionReference> get messages async {
+    if (_messages != null) return _messages!;
+
+    _messages = await _getMessages();
+    return _messages!;
+  }
+
+  Future _getMessages() async {
+    _messages = FirebaseFirestore.instance.collection('messages');
+  }
+
+  Future<GalleryImage> getGalleryItem(String imageID) async {
+    CollectionReference gallery = await instance.gallery;
+
+    String returnID = imageID;
+    String userID = '';
+    String src = '';
+    String imageName = '';
+    String description = '';
+    
+    await gallery.doc(imageID).get().then(
+      (document) {
+        userID = document['userID'];
+        src = document['src'];
+        imageName = document['imageName'];
+        description = document['description'];
+      }
+    );
+
+    GalleryImage userToReturn = GalleryImage(imageID: returnID, src: src, userID: userID, imageName: imageName, description: description);
+    
+    return userToReturn;
+  }
+
   Stream<QuerySnapshot<Object?>> getGalleryStream() async* {
     CollectionReference gallery = await instance.gallery;
 
@@ -156,6 +192,14 @@ class GalleryStoreService {
     await favorites.doc(favoriteID).delete();
   }
 
+  Stream<QuerySnapshot<Object?>> getUserFavoritesStream(String userID) async* {
+    CollectionReference favorites = await instance.favorites;
+    
+    Stream<QuerySnapshot<Object?>> snapshots = favorites.where('userID', isEqualTo: userID).snapshots();
+
+    yield* snapshots;
+  }
+
   Stream<QuerySnapshot<Object?>> getFavoritesStream(String imgID) async* {
     CollectionReference favorites = await instance.favorites;
     
@@ -215,7 +259,21 @@ class GalleryStoreService {
 
     yield* snapshots;
   }
+
+  /*
+  Future<void> addFriendLink(String userID, String otherUserID) async {
+    CollectionReference friends = await instance.friends;
+
+    await friends.doc(friendLinkID).delete();
+  }
+  */
   
+  Future<void> removeFriendLink(String friendLinkID) async {
+    CollectionReference friends = await instance.friends;
+
+    await friends.doc(friendLinkID).delete();
+  }
+
   Stream<QuerySnapshot<Object?>> getUserFriends(String uid) async* {
     CollectionReference friends = await instance.friends;
 

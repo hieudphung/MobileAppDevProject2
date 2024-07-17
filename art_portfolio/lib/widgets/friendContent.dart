@@ -9,10 +9,12 @@ class UserFriendsList extends StatelessWidget {
   const UserFriendsList({super.key,
   required this.userID,
   required this.limitedDisplay,
+  required this.isUser,
   });
 
   final String userID;
   final bool limitedDisplay;
+  final bool isUser;
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +36,9 @@ class UserFriendsList extends StatelessWidget {
 
                   if (documentSnapshot['link'][0] == userID) {
                     //return Text(documentSnapshot['link'][1]);
-                    return (limitedDisplay) ? ShortenedFriendRow(friendID: documentSnapshot['link'][1]) : FriendRow(friendID: documentSnapshot['link'][1]);
+                    return (limitedDisplay) ? ShortenedFriendRow(friendID: documentSnapshot['link'][1]) : FriendRow(friendLinkID: documentSnapshot.id, friendID: documentSnapshot['link'][1], isUser: isUser);
                   } else if (documentSnapshot['link'][1] == userID){
-                    return (limitedDisplay) ? ShortenedFriendRow(friendID: documentSnapshot['link'][0]) : FriendRow(friendID: documentSnapshot['link'][0]);
+                    return (limitedDisplay) ? ShortenedFriendRow(friendID: documentSnapshot['link'][0]) : FriendRow(friendLinkID: documentSnapshot.id, friendID: documentSnapshot['link'][0], isUser: isUser);
                   }
 
                   return Container();
@@ -101,14 +103,18 @@ class ShortenedFriendRow extends StatelessWidget {
 
 class FriendRow extends StatelessWidget {
   const FriendRow({super.key,
-  required this.friendID});
+  required this.friendLinkID,
+  required this.friendID,
+  required this.isUser});
 
+  final String friendLinkID;
   final String friendID;
+  final bool isUser;
 
   void showUnfriendDialog(BuildContext context) {
 
     Future<void> unfriend() async {
-      //await GalleryStoreService.instance.removeFriendLink(uid, friendID);
+      await GalleryStoreService.instance.removeFriendLink(friendLinkID);
     }
 
     showDialog(
@@ -158,7 +164,11 @@ class FriendRow extends StatelessWidget {
                   children: <Widget>[
                     AvatarImage(avatarSrc: snapshot.data!.avatar, size: 46.0, padding: 14.0),
                     Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: Text(snapshot.data!.username, textAlign: TextAlign.left,))),
-                    Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: IconButton(icon: const Icon(Icons.cancel), onPressed: () {showUnfriendDialog(context);})))
+                    Builder(
+                      builder: (context) {
+                      if (isUser) return Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: IconButton(icon: const Icon(Icons.cancel), onPressed: () {showUnfriendDialog(context);})));
+                      return Container();
+                    })
                   ]
                 ),
               onTap: () => {goToProfile(context, friendID)}

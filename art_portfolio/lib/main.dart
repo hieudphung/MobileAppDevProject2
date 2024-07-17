@@ -38,6 +38,7 @@ class TaskApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: Scaffold(
+            resizeToAvoidBottomInset : false,
             appBar: AppBar(title: const Text(appBarText),
                            backgroundColor: Colors.indigo[100]),
             body: const TaskLoginPage()),

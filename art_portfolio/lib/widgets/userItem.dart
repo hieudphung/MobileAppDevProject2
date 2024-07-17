@@ -3,7 +3,10 @@ import 'package:art_portfolio/model/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import '../model/galleryImage.dart';
 import '../pages/friendsListPage.dart';
+
+import './galleryItem.dart';
 
 class UserCard extends StatelessWidget {
   const UserCard({super.key,
@@ -299,6 +302,227 @@ class MoreFriends extends StatelessWidget {
           onPressed: () => _toFriendList(context),
         )
       )
+    );
+  }
+}
+
+class MoreUploads extends StatelessWidget {
+  const MoreUploads({super.key,
+  required this.userID
+  });
+
+  final String userID;
+
+  void _toUploadList(BuildContext context) {
+    /*
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => UploadListPage(userID: userID)));
+    */
+    print('to uploads');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0), 
+      child: Align(
+        alignment: Alignment.bottomRight,
+        child: IconButton(
+          icon: const Icon(Icons.more),
+          onPressed: () => _toUploadList(context),
+        )
+      )
+    );
+  }
+}
+
+class UserUploadsList extends StatelessWidget {
+  const UserUploadsList ({super.key,
+  required this.userID,
+  required this.limitedDisplay
+  });
+
+  final String userID;
+  final bool limitedDisplay;
+
+  @override
+  Widget build(BuildContext context) {
+    return (limitedDisplay) ? 
+      StreamBuilder(
+        stream: GalleryStoreService.instance.getUserGalleryStream(userID),
+        builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+          if (streamSnapshot.hasData) {
+            //streamSnapshot.data!;
+
+            int docSize = streamSnapshot.data!.docs.length;
+            
+            if (docSize > 0) {
+              List<GalleryImage> galleryImages = List.empty(growable: true);
+
+              for (int i = 0; i < docSize; i++) {
+                final DocumentSnapshot documentSnapshot =
+                    streamSnapshot.data!.docs[i];
+                  
+                    galleryImages.add(GalleryImage(imageID: documentSnapshot.id,
+                                              userID: documentSnapshot['userID'], 
+                                              src: documentSnapshot['src'],
+                                              imageName: documentSnapshot['imageName'],
+                                              description: documentSnapshot['description']));
+                }
+
+              //FIGURE OUT LAST STUFF:
+              //ADDING THE SECONDARY LIST
+                return Expanded( child: Row(
+                  children: <Widget> 
+                  [
+                    Expanded(child: UserGalleryItem(index: 0, galleryImage: galleryImages[0])),
+                    /*
+                    ListView.builder(
+                  itemCount: (galleryImages.length > 3) ? 3 : galleryImages.length,
+                  itemBuilder: (context, index) {
+                    return Expanded(child: /*UserGalleryItem(index: index, galleryImage: galleryImages[index])*/ Text('a'));
+                  })
+                  */
+                  ]
+              ));
+            } else {
+              return const Text("No images uploaded!");
+            }
+          }
+
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      )
+    : StreamBuilder(
+        stream: GalleryStoreService.instance.getUserGalleryStream(userID),
+        builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+          if (streamSnapshot.hasData) {
+            //streamSnapshot.data!;
+
+            int docSize = streamSnapshot.data!.docs.length;
+            
+            if (docSize > 0) {
+              List<GalleryImage> galleryImages = List.empty(growable: true);
+
+              for (int i = 0; i < docSize; i++) {
+                final DocumentSnapshot documentSnapshot =
+                    streamSnapshot.data!.docs[i];
+                  
+                    galleryImages.add(GalleryImage(imageID: documentSnapshot.id,
+                                              userID: documentSnapshot['userID'], 
+                                              src: documentSnapshot['src'],
+                                              imageName: documentSnapshot['imageName'],
+                                              description: documentSnapshot['description']));
+                }
+
+              //FIGURE OUT LAST STUFF:
+              //ADDING THE SECONDARY LIST
+                return 
+                    ListView.builder(
+                  itemCount: galleryImages.length,
+                  itemBuilder: (context, index) {
+                    return UserGalleryItem(index: index, galleryImage: galleryImages[index]);
+                  });
+            } else {
+              return const Text("No images uploaded!");
+            }
+          }
+
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+    );
+  }
+}
+
+
+
+class MoreFavorites extends StatelessWidget {
+  const MoreFavorites({super.key,
+  required this.userID
+  });
+
+  final String userID;
+
+  void _toFavoritesList(BuildContext context) {
+    /*
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => UploadListPage(userID: userID)));
+    */
+    print('to favorites');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0), 
+      child: Align(
+        alignment: Alignment.bottomRight,
+        child: IconButton(
+          icon: const Icon(Icons.more),
+          onPressed: () => _toFavoritesList(context),
+        )
+      )
+    );
+  }
+}
+
+class FavoritesList extends StatelessWidget {
+  const FavoritesList ({super.key,
+  required this.userID,
+  required this.limitedDisplay
+  });
+
+  final String userID;
+  final bool limitedDisplay;
+
+  @override
+  Widget build(BuildContext context) {
+    return (limitedDisplay) ? 
+      StreamBuilder(
+        stream: GalleryStoreService.instance.getUserFavoritesStream(userID),
+        builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+          if (streamSnapshot.hasData) {
+            //streamSnapshot.data!;
+
+            int docSize = streamSnapshot.data!.docs.length;
+            
+            if (docSize > 0) {
+              return FavoriteGalleryItem(index: 0, imageID: streamSnapshot.data!.docs[0]['imageID']);
+            } else {
+              return const Text("No favorites!");
+            }
+          }
+
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+      )
+    : StreamBuilder(
+        stream: GalleryStoreService.instance.getUserFavoritesStream(userID),
+        builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+          if (streamSnapshot.hasData) {
+            //streamSnapshot.data!;
+
+            int docSize = streamSnapshot.data!.docs.length;
+            
+            if (docSize > 0) {
+              return Text('$docSize');
+            } else {
+              return const Text("No favorites!");
+            }
+          }
+
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
     );
   }
 }
