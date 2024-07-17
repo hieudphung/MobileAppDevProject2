@@ -1,9 +1,10 @@
-import 'package:art_portfolio/widgets/friendContent.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class FriendsListPage extends StatelessWidget {
-  const FriendsListPage({super.key,
+import '../widgets/uploadContent.dart';
+
+class UploadsListPage extends StatelessWidget {
+  const UploadsListPage({super.key,
   required this.userID});
 
   final String userID;
@@ -17,7 +18,7 @@ class FriendsListPage extends StatelessWidget {
           DefaultTabController(
             length: 2,
             child: Scaffold(
-            appBar: AppBar(title: const Text('Friend\'s List'),
+            appBar: AppBar(title: const Text('Uploads List'),
                            backgroundColor: const Color.fromARGB(255, 79, 255, 240),
                            bottom: const TabBar(
                             tabs: [
@@ -93,3 +94,4 @@ class UploadFormBody extends StatelessWidget {
     );
   }
 }
+

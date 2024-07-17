@@ -244,6 +244,14 @@ class RequestRow extends StatelessWidget {
 
   final String senderID;
 
+  void showRequestForm(BuildContext context) {
+    print('accept friend request?');
+  }
+
+  void showDeclineForm(BuildContext context) {
+    print('decline friend request?');
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -262,8 +270,8 @@ class RequestRow extends StatelessWidget {
                   AvatarImage(avatarSrc: snapshot.data!.avatar, size: 46.0, padding: 14.0),
                   Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: Text(snapshot.data!.username, textAlign: TextAlign.left,))),
                   const Expanded(child: Padding(padding: EdgeInsets.all(1.5), child: Text('Incoming', textAlign: TextAlign.right,))),
-                  Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: IconButton(icon: const Icon(Icons.check), onPressed: () {}))),
-                  Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: IconButton(icon: const Icon(Icons.cancel), onPressed: () {})))
+                  Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: IconButton(icon: const Icon(Icons.check), onPressed: () {showRequestForm(context);}))),
+                  Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: IconButton(icon: const Icon(Icons.cancel), onPressed: () {showDeclineForm(context);})))
                 ]
               ),
               onTap: () => {goToProfile(context, senderID)}

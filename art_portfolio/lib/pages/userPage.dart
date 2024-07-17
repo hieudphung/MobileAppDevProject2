@@ -1,8 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../widgets/favoriteContent.dart';
 import '../widgets/friendContent.dart';
+import '../widgets/uploadContent.dart';
 import '../widgets/userItem.dart';
 import '../widgets/userBar.dart';
 
@@ -64,7 +65,7 @@ class UserPage extends StatelessWidget {
         child: 
           Row(
             children: <Widget> [
-              Expanded(child: UserUploads(userID: idToUse)),
+              Expanded(child: UserUploads(userID: idToUse, isUser: (uid == idToUse))),
               Expanded(child: UserFavorites(userID: idToUse)),
             ]
           ),
@@ -116,9 +117,11 @@ class UserFriends extends StatelessWidget {
 class UserUploads extends StatelessWidget {
   const UserUploads ({super.key,
   required this.userID,
+  required this.isUser,
   });
 
   final String userID;
+  final bool isUser;
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +129,7 @@ class UserUploads extends StatelessWidget {
       child: Column(
         children: <Widget>[
           const Text('Uploads'),
-          Expanded(child: UserUploadsList(userID: userID, limitedDisplay: true)),
+          Expanded(child: UserUploadsList(userID: userID, limitedDisplay: true, isUser: isUser)),
           MoreUploads(userID: userID)
         ]
       )

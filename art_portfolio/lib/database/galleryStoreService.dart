@@ -260,14 +260,34 @@ class GalleryStoreService {
     yield* snapshots;
   }
 
-  /*
+  
   Future<void> addFriendLink(String userID, String otherUserID) async {
     CollectionReference friends = await instance.friends;
 
-    await friends.doc(friendLinkID).delete();
+    await friends.add({"link": [userID, otherUserID]});
   }
-  */
   
+  
+  Future<bool> areUsersFriends(String userID, String otherUserID) async {
+    CollectionReference friends = await instance.friends;
+
+    bool areFriends = false;
+
+    await friends.where(
+    Filter.and(
+      Filter('link', whereIn: [userID]),
+      Filter('link', whereIn: [otherUserID])
+    )).get().then(
+      (value) {
+        //enough to signify friend link exists
+        //lazy implementation but still
+        areFriends = true;
+      }
+    );
+
+    return areFriends;
+  }
+
   Future<void> removeFriendLink(String friendLinkID) async {
     CollectionReference friends = await instance.friends;
 
