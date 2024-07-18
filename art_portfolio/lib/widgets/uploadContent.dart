@@ -1,9 +1,16 @@
+import 'dart:io';
+
 import 'package:art_portfolio/database/galleryStoreService.dart';
 import 'package:art_portfolio/model/galleryImage.dart';
 import 'package:art_portfolio/widgets/galleryItem.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+
+import 'package:image_picker/image_picker.dart';
 
 import '../pages/uploadsListPage.dart';
 
@@ -108,13 +115,167 @@ class UserUploadsList extends StatelessWidget {
   }
 }
 
-class UploadForm extends StatelessWidget {
-  const UploadForm({super.key, required String userID});
+class UploadForm extends StatefulWidget {
+  const UploadForm({super.key, required this.userID});
+
+  final String userID;
+
+  @override
+  State<UploadForm> createState() => UploadFormState();
+}
+
+class UploadFormState extends State<UploadForm> {
+  List<String> textFieldsValue = List.empty(growable: true);
+  final _uploadFormKey = GlobalKey<FormState>();
+
+  bool validated = false;
+
+  File? galleryFile;
+  final picker = ImagePicker();
+
+  Image currentImage = Image.asset('assets/images/no_image.png', height: 300);
+  
+  Future<void> uploadNewImage() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    XFile? xfilePick = pickedFile;
+
+    setState(() {
+        if (xfilePick != null) {
+          galleryFile = File(pickedFile!.path);
+          currentImage = Image.file(galleryFile!, height: 300);
+          //print('new image uploaded!');
+          ScaffoldMessenger.of(context).showSnackBar(// is this context <<<
+              const SnackBar(content: Text('New image uploaded!')));
+
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(// is this context <<<
+              const SnackBar(content: Text('No image selected!')));
+        }
+    });
+  }
+
+  Future<void> submitNewArtwork() async {
+    //confirm can make the submission
+    if ((_uploadFormKey.currentState!.validate()) &&
+       galleryFile != null) {
+        print('submitting new entry...');
+
+        final storage = FirebaseStorage.instance.ref();
+
+        final galleryItemRef = storage.child("beep.jpg");
+        final galleryItemImageRef = storage.child("images/beep.jpg");
+
+        // While the file names are the same, the references point to different files
+        assert(galleryItemRef.name == galleryItemImageRef.name);
+        assert(galleryItemRef.fullPath != galleryItemImageRef.fullPath);
+
+        try {
+          await galleryItemRef.putData(galleryFile!.readAsBytesSync());
+        } catch (e) {
+          print(e);
+        }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(// is this context <<<
+              const SnackBar(content: Text('Invalid Submission!')));
+    }
+
+    textFieldsValue = List.empty(growable: true);
+  }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return Container();
+    return Form(
+      key: _uploadFormKey,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          SizedBox(
+            width: 600,
+            child: 
+            Padding(
+              padding: const EdgeInsets.all(14.0),
+              child: TextFormField(
+                decoration: const InputDecoration(
+                  labelText: 'New Title'
+                ),
+
+                maxLines: 1,
+                minLines: 1,
+
+                validator: (value){
+                  print(value);
+                  if (value == null || value.isEmpty) {
+                    return 'Title empty!';
+                  } else {
+                    textFieldsValue.add(value);
+                  }
+
+                  return null;
+                },
+              ),
+            )
+          ),
+          SizedBox(
+            width: 600,
+            child: 
+            Padding(
+              padding: const EdgeInsets.all(14.0),
+              child: TextFormField(
+              decoration: const InputDecoration(
+                labelText: 'New Description'
+              ),
+
+              maxLines: 6,
+              minLines: 1,
+
+              validator: (value){
+                  if (value == null || value.isEmpty) {
+                    return 'Description empty!';
+                  } else {
+                    textFieldsValue.add(value);
+                  }
+
+                  return null;
+                },
+              ),
+            ),
+          ),
+          SizedBox(
+            width: 300,
+            child: 
+            Padding(
+              padding: const EdgeInsets.all(26.0),
+              child: ElevatedButton(
+              child: const Text('Upload New Image'),
+              onPressed: () async {
+                  await uploadNewImage();
+                },
+              ),
+            ),
+          ),
+          Expanded(
+            child: 
+            Padding(
+              padding: const EdgeInsets.all(14.0),
+              child: currentImage
+            ),
+          ),
+          SizedBox(
+            width: 600,
+            child: 
+            Padding(
+              padding: const EdgeInsets.all(26.0),
+              child: ElevatedButton(
+              child: const Text('Submit New Artwork'),
+              onPressed: () async {
+                  await submitNewArtwork();
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 

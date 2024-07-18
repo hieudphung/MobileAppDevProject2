@@ -89,7 +89,7 @@ class UploadFormBody extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-      Expanded(flex: 2, child: UploadForm(userID: userID),),
+      Expanded(flex: 2, child: UploadForm(userID: userID)),
       ],
     );
   }
