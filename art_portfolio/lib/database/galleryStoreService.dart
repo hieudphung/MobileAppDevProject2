@@ -319,78 +319,33 @@ class GalleryStoreService {
     yield* snapshots;
   }
 
-  /*
-  Future<void> updateTaskTime(String? id, String dayOfWeek, String startTime, String endTime) async {
-    CollectionReference tasks = await instance.tasks;
+  Future<void> addMessage(String uid, String forwardID, String title, String message) async {
+    CollectionReference messages = await instance.messages;
 
-    await tasks.doc(id).update({
-      "dayOfWeek": dayOfWeek,
-      "startTime": startTime,
-      "endTime": endTime
+    await messages.add({
+      "senderID" : uid,
+      "receiverID" : forwardID,
+      "title" : title,
+      "message" : message
     });
   }
 
-  Future<void> updateTaskCheck(String? id, bool check) async {
-    CollectionReference tasks = await instance.tasks;
+  Future<void> deleteMessage(String messageID) async {
+    CollectionReference messages = await instance.messages;
 
-    await tasks.doc(id).update({
-      "isDone": check,
-    });
+    await messages.doc(messageID).delete();
   }
 
-  Future<void> deleteTask(String? id) async {
-    CollectionReference tasks = await instance.tasks;
+  Stream<QuerySnapshot<Object?>> getUserMessagesStream(String uid) async* {
+    CollectionReference messages = await instance.messages;
+    
+    //as long as friend request mentions user ID in either 
+    Stream<QuerySnapshot<Object?>> snapshots = messages.where(
+    Filter.or(
+      Filter("receiverID", isEqualTo: uid),
+      Filter("senderID", isEqualTo: uid)
+    )).snapshots();
 
-    await tasks.doc(id).delete();
+    yield* snapshots;
   }
-
-  Future<void> deleteTaskAndNested(String? id) async {
-    CollectionReference tasks = await instance.tasks;
-
-    await tasks.doc(id).delete();
-
-    //also delete tasks if linked
-    tasks.where('taskLink', isEqualTo: id).get().then((value) => {
-      //value.delete();
-      value.docs.forEach((snapshot){
-        snapshot.reference.delete();
-      })
-    },);
-  }
-
-  Future<bool> checkUserExists(String? uid) async {
-    CollectionReference users = await instance.users;
-
-    bool userExists = false;
-
-    try {
-      var doc = await users.doc(uid).get();
-      userExists = doc.exists;
-      
-    } catch (e) {
-      throw e;
-    }
-
-    return userExists;
-  }
-
-  Future<void> addUser(String uid) async {
-    CollectionReference users = await instance.users;
-
-    await users.add({"userID": uid});
-
-    //print('aaaaaaaaaaaaaaaa ${newUser.id}');
-
-    /*
-    await users.doc(newUser.id).collection('userTasks').add(
-        {"description": "Account created!", 
-          "isDone": false, "dayOfWeek": "Monday",
-          "startTime" : "00:00:00",
-          "endTime" : "04:00:00"
-        }
-      );
-    */
-  }
-
-  */
 }

@@ -1,3 +1,4 @@
+import 'package:art_portfolio/pages/messagesPage.dart';
 import 'package:art_portfolio/pages/userPage.dart';
 import 'package:flutter/material.dart';
 
@@ -67,7 +68,7 @@ class TaskLoginPage extends StatelessWidget {
 
           //Go to landing page if logged in
           //Can replace gallery page with anything else to get to landing w/ menu bar
-          return const UserPage(userID: '');
+          return const MessagesListPage(); //const UserPage(userID: '');
         }
     );
   }

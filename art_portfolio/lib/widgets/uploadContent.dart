@@ -165,9 +165,13 @@ class UploadFormState extends State<UploadForm> {
         final galleryItemRef = storage.child("beep.jpg");
         final galleryItemImageRef = storage.child("images/beep.jpg");
 
-        // While the file names are the same, the references point to different files
         assert(galleryItemRef.name == galleryItemImageRef.name);
         assert(galleryItemRef.fullPath != galleryItemImageRef.fullPath);
+
+        //var downloadURL = await galleryItemRef.getDownloadURL();
+        
+        print('aaaaaaaaa');
+        //print(downloadURL);
 
         try {
           await galleryItemRef.putData(galleryFile!.readAsBytesSync());
