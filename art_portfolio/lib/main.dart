@@ -69,7 +69,7 @@ class GalleryRedirect extends StatelessWidget {
 
           //Go to landing page if logged in
           //Can replace gallery page with anything else to get to landing w/ menu bar
-          return const UserLookupPage();//UserPage(userID: '');//const MessagesListPage(); //const UserPage(userID: '');
+          return const UserPage(userID: '');//const MessagesListPage(); //const UserPage(userID: '');
         }
     );
   }

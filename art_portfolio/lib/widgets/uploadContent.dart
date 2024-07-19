@@ -155,15 +155,22 @@ class UploadFormState extends State<UploadForm> {
   }
 
   Future<void> submitNewArtwork() async {
+    var galleryItemRef;
+    var galleryItemImageRef;
+    bool submitted = false;
+
     //confirm can make the submission
     if ((_uploadFormKey.currentState!.validate()) &&
        galleryFile != null) {
+        String artworkName = textFieldsValue[0];
+        String artworkDescription = textFieldsValue[1];
+
         print('submitting new entry...');
 
         final storage = FirebaseStorage.instance.ref();
 
-        final galleryItemRef = storage.child("beep.jpg");
-        final galleryItemImageRef = storage.child("images/beep.jpg");
+        galleryItemRef = storage.child("$artworkName.jpg");
+        galleryItemImageRef = storage.child("images/$artworkName.jpg");
 
         assert(galleryItemRef.name == galleryItemImageRef.name);
         assert(galleryItemRef.fullPath != galleryItemImageRef.fullPath);
@@ -174,9 +181,22 @@ class UploadFormState extends State<UploadForm> {
         //print(downloadURL);
 
         try {
+          submitted = true;
           await galleryItemRef.putData(galleryFile!.readAsBytesSync());
         } catch (e) {
+          submitted = false;
           print(e);
+        }
+
+        if (submitted) {
+          String downloadURL = await galleryItemRef.getDownloadURL();
+          print(artworkName);
+          print(artworkDescription);
+          print(downloadURL);
+          print(widget.userID);
+
+          //Now store in data table
+          await GalleryStoreService.instance.addGalleryItem(artworkName, artworkDescription, downloadURL, widget.userID);
         }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(// is this context <<<

@@ -104,6 +104,17 @@ class GalleryStoreService {
     _messages = FirebaseFirestore.instance.collection('messages');
   }
 
+  Future<void> addGalleryItem(String name, String description, String url, String userID) async {
+    CollectionReference gallery = await instance.gallery;
+
+    gallery.add({
+      "imageName" : name,
+      "description" : description,
+      "src" : url,
+      "userID" : userID
+    });
+  }
+
   Future<GalleryImage> getGalleryItem(String imageID) async {
     CollectionReference gallery = await instance.gallery;
 
