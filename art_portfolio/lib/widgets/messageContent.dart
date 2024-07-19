@@ -97,7 +97,7 @@ class MessageRecieveRow extends StatelessWidget {
                   Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: IconButton(icon: const Icon(Icons.read_more), onPressed: () {goToRead(context);}))),
                 ]
               ),
-              onTap: () => {goToProfile(context, senderID)}
+              onTap: () => {goToProfileTemp(context, senderID)}
               );
             } else {
               return const Text("No user here!");
@@ -162,7 +162,7 @@ class MessageForwardRow extends StatelessWidget {
                             Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: IconButton(icon: const Icon(Icons.read_more), onPressed: () {goToRead(context);}))),
                 ]
               ),
-              onTap: () => {goToProfile(context, forwardID)}
+              onTap: () => {goToProfileTemp(context, forwardID)}
               );
             } else {
               return const Text("No user here!");
@@ -210,7 +210,7 @@ class MessageUserRow extends StatelessWidget {
                             Expanded(flex: 3, child: Padding(padding: const EdgeInsets.all(1.5), child: Text(snapshot.data!.username, textAlign: TextAlign.left,))),
                 ]
               ),
-              onTap: () => {goToProfile(context, userID)}
+              onTap: () => {goToProfileTemp(context, userID)}
               );
             } else {
               return const Text("No user here!");

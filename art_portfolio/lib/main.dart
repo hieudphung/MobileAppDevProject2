@@ -10,6 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'pages/portfolioLogin.dart';
 
 import 'pages/galleryPage.dart';
+import 'pages/userLookupPage.dart';
 import 'pages/userPage.dart';
 
 void main() async {
@@ -42,13 +43,13 @@ class TaskApp extends StatelessWidget {
             resizeToAvoidBottomInset : false,
             appBar: AppBar(title: const Text(appBarText),
                            backgroundColor: Colors.indigo[100]),
-            body: const TaskLoginPage()),
+            body: const GalleryRedirect()),
     );
   }
 }
 
-class TaskLoginPage extends StatelessWidget {
-  const TaskLoginPage({super.key});
+class GalleryRedirect extends StatelessWidget {
+  const GalleryRedirect({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +69,7 @@ class TaskLoginPage extends StatelessWidget {
 
           //Go to landing page if logged in
           //Can replace gallery page with anything else to get to landing w/ menu bar
-          return const MessagesListPage(); //const UserPage(userID: '');
+          return const UserLookupPage();//UserPage(userID: '');//const MessagesListPage(); //const UserPage(userID: '');
         }
     );
   }

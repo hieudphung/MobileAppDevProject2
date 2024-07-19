@@ -3,6 +3,7 @@ import 'package:art_portfolio/model/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import '../common/common.dart';
 import '../pages/friendsListPage.dart';
 
 class UserCard extends StatelessWidget {
@@ -141,7 +142,7 @@ class UserEdit extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: GalleryStoreService.instance.getUser(userID),
+      future: GalleryStoreService.instance.getUserByUserID(userID),
         builder: (context, AsyncSnapshot<UserGalleryInfo> snapshot) {
           if (snapshot.hasData) {
             //streamSnapshot.data!;
@@ -322,6 +323,51 @@ class MoreFriends extends StatelessWidget {
           onPressed: () => _toFriendList(context),
         )
       )
+    );
+  }
+}
+
+class UserRow extends StatelessWidget {
+  const UserRow({super.key,
+  required this.userID});
+
+  final String userID;
+
+  @override
+  Widget build(BuildContext context) {
+    print(userID);
+
+    return FutureBuilder(
+      future: GalleryStoreService.instance.getUser(userID),
+        builder: (context, AsyncSnapshot<UserGalleryInfo> snapshot) {
+          if (snapshot.hasData) {
+            //streamSnapshot.data!;
+
+            if (snapshot.data != null) {
+              //FIGURE OUT LAST STUFF:
+              //ADDING THE SECONDARY LIST
+              return 
+              GestureDetector(
+              child: Row(
+                children: <Widget>[
+                  AvatarImage(avatarSrc: snapshot.data!.avatar, size: 46.0, padding: 14.0),
+                  Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: Text(snapshot.data!.username, textAlign: TextAlign.left,))),
+                ]
+              ),
+              onTap: () => {goToProfileTemp(context, snapshot.data!.id)}
+              );
+            } else {
+              return const Text("No user here!");
+            }
+          }
+
+          return const Row(
+                children: <Widget>[
+                           AvatarImage(avatarSrc: '', size: 46.0, padding: 14.0),
+                           Expanded(child: Padding(padding: EdgeInsets.all(1.5), child: Text('Blank User', textAlign: TextAlign.left,))),
+            ]
+          );
+        },
     );
   }
 }

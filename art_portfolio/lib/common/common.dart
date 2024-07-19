@@ -29,3 +29,11 @@ void goToProfile(BuildContext context, String inputUserID) async {
   Route route = MaterialPageRoute(builder: (context) => UserPageMaterial(userID: inputUserID));
   await Navigator.pushReplacement(context, route);
 }
+
+void goToProfileTemp(BuildContext context, String inputUserID) async {
+  Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => UserPageMaterial(userID: inputUserID)));
+}
+
+

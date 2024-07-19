@@ -67,7 +67,7 @@ class ShortenedFriendRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: GalleryStoreService.instance.getUser(friendID),
+      future: GalleryStoreService.instance.getUserByUserID(friendID),
         builder: (context, AsyncSnapshot<UserGalleryInfo> snapshot) {
           if (snapshot.hasData) {
             //streamSnapshot.data!;
@@ -150,7 +150,7 @@ class FriendRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: GalleryStoreService.instance.getUser(friendID),
+      future: GalleryStoreService.instance.getUserByUserID(friendID),
         builder: (context, AsyncSnapshot<UserGalleryInfo> snapshot) {
           if (snapshot.hasData) {
             //streamSnapshot.data!;
@@ -255,7 +255,7 @@ class RequestRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: GalleryStoreService.instance.getUser(senderID),
+      future: GalleryStoreService.instance.getUserByUserID(senderID),
         builder: (context, AsyncSnapshot<UserGalleryInfo> snapshot) {
           if (snapshot.hasData) {
             //streamSnapshot.data!;
@@ -274,7 +274,7 @@ class RequestRow extends StatelessWidget {
                   Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: IconButton(icon: const Icon(Icons.cancel), onPressed: () {showDeclineForm(context);})))
                 ]
               ),
-              onTap: () => {goToProfile(context, senderID)}
+              onTap: () => {goToProfileTemp(context, senderID)}
               );
             } else {
               return const Text("No user here!");
@@ -303,7 +303,7 @@ class SendRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: GalleryStoreService.instance.getUser(recipientID),
+      future: GalleryStoreService.instance.getUserByUserID(recipientID),
         builder: (context, AsyncSnapshot<UserGalleryInfo> snapshot) {
           if (snapshot.hasData) {
             //streamSnapshot.data!;

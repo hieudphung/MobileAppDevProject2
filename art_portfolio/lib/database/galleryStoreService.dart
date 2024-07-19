@@ -217,6 +217,28 @@ class GalleryStoreService {
   Future<UserGalleryInfo> getUser(String uid) async {
     CollectionReference users = await instance.users;
 
+    var user = users.doc(uid);
+
+    String returnID = '';
+    String username = 'Invalid User';
+    String avatarSrc = '';
+    String description = 'This user doesn\'t exist!';
+
+    await user.get().then((item) {
+      returnID = item['userID'];
+      username = item['username'];
+      avatarSrc = item['avatarSrc'];
+      description = item['about'];
+    });
+
+    UserGalleryInfo userToReturn = UserGalleryInfo(id: returnID, username: username, avatar: avatarSrc, description: description);
+    
+    return userToReturn;
+  }
+
+  Future<UserGalleryInfo> getUserByUserID(String uid) async {
+    CollectionReference users = await instance.users;
+
     var query = users.where('userID', isEqualTo:uid);
 
     String returnID = '';
@@ -249,6 +271,17 @@ class GalleryStoreService {
           "about": newAbout
       })
     },);
+  }
+
+  Stream<QuerySnapshot<Object?>> getUserlistStream(String username) async* {
+    CollectionReference users = await instance.users;
+
+    //print('updating...');
+
+    //should only return one, so taking first either way
+    var snapshots = users.snapshots();
+
+    yield* snapshots;
   }
 
   Stream<QuerySnapshot<Object?>> getUserStream(String uid) async* {

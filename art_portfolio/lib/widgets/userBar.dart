@@ -18,7 +18,7 @@ class userBar extends StatelessWidget{
 
     //Get username from database
     if (user != null) {
-      displayToReturn = await GalleryStoreService.instance.getUser(user.uid);
+      displayToReturn = await GalleryStoreService.instance.getUserByUserID(user.uid);
     }
 
     return displayToReturn.username;
