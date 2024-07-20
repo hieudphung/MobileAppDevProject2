@@ -5,14 +5,31 @@ class CustomMenuBar extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTap;
 
-  CustomMenuBar({required this.menuItems, required this.currentIndex, required this.onTap});
+  const CustomMenuBar({super.key, required this.menuItems, required this.currentIndex, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       items: List.generate(menuItems.length, (index) {
+        IconData iconData;
+        switch (menuItems[index]) {
+          case 'Home':
+            iconData = Icons.home;
+            break;
+          case 'Gallery':
+            iconData = Icons.photo;
+            break;
+          case 'Profile':
+            iconData = Icons.person;
+            break;
+          case 'Messages':
+            iconData = Icons.message;
+            break;
+          default:
+            iconData = Icons.home;
+        }
         return BottomNavigationBarItem(
-          icon: Icon(Icons.home), // Replace with appropriate icons for each menu item
+          icon: Icon(iconData),
           label: menuItems[index],
         );
       }),

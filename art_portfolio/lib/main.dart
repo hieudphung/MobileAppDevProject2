@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import 'menu_bar.dart'; // Make sure the file path is correct
-import 'pages/home.dart'; // Adjust paths as needed
+import 'menu_bar.dart';
+import 'pages/home.dart';
 import 'pages/gallery.dart';
 import 'pages/profile.dart';
 import 'pages/messages.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -18,19 +20,20 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      // Define routes for navigation (if needed)
       routes: {
-        '/': (context) => MyHomePage(),
-        '/gallery': (context) => GalleryPage(),
-        '/profile': (context) => ProfilePage(),
-        '/messages': (context) => MessagesPage(),
+        '/': (context) => const MyHomePage(),
+        '/gallery': (context) => const GalleryPage(),
+        '/profile': (context) => const ProfilePage(),
+        '/messages': (context) => const MessagesPage(),
       },
-      initialRoute: '/', // Set the initial route to '/'
+      initialRoute: '/',
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -39,10 +42,10 @@ class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
 
   static List<Widget> _widgetOptions = <Widget>[
-    HomePage(),
-    GalleryPage(),
-    ProfilePage(),
-    MessagesPage(),
+    const HomePage(),
+    const GalleryPage(),
+    const ProfilePage(),
+    const MessagesPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -55,13 +58,13 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Art Portfolio'),
+        title: const Text('Art Portfolio'),
       ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: CustomMenuBar(
-        menuItems: ['Home', 'Gallery', 'Profile', 'Messages'],
+        menuItems: const ['Home', 'Gallery', 'Profile', 'Messages'],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
       ),
