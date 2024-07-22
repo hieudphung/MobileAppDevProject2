@@ -52,7 +52,8 @@ class GalleryAndSearchState extends State<GalleryAndSearch> {
     //gallery inside this so that when form updates state, search queue can be read by the gallery
     return Column(
       children: <Widget>[
-        Flexible(
+        Expanded(
+          flex: 1,
           child: Form(
             key: widget._taskFormKey,
             child: Row(
@@ -101,7 +102,8 @@ class GalleryAndSearchState extends State<GalleryAndSearch> {
             )
           ),
         ),
-        Expanded(child: GalleryList(searchString: searchItem)),
+        Expanded(
+          flex: 8, child: GalleryList(searchString: searchItem)),
       ],
     );
   }

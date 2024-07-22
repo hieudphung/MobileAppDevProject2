@@ -27,7 +27,7 @@ class FavoritesList extends StatelessWidget {
             int docSize = streamSnapshot.data!.docs.length;
             
             if (docSize > 0) {
-              return FavoriteGalleryItem(index: 0, imageID: streamSnapshot.data!.docs[0]['imageID']);
+              return FavoriteGalleryPreview(index: 0, imageID: streamSnapshot.data!.docs[0]['imageID']);
             } else {
               return const Text("No favorites!");
             }

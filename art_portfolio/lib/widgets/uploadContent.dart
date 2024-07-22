@@ -52,12 +52,7 @@ class UserUploadsList extends StatelessWidget {
 
               //FIGURE OUT LAST STUFF:
               //ADDING THE SECONDARY LIST
-                return Expanded( child: Row(
-                  children: <Widget> 
-                  [
-                    Expanded(child: UserGalleryItem(index: 0, galleryImage: galleryImages[0])),
-                  ]
-              ));
+                return Expanded(child: UserGalleryPreview(index: 0, galleryImage: galleryImages[0]));
             } else {
               return const Text("No images uploaded!");
             }

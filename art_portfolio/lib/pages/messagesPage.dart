@@ -12,12 +12,7 @@ class MessagesListPage extends StatelessWidget {
     String uid = FirebaseAuth.instance.currentUser!.uid;
     
     //assumed can only be accessed by the user anyways, not others
-    return Scaffold(
-            appBar: AppBar(title: const Text('Messages'),
-                           backgroundColor: Color.fromARGB(255, 255, 168, 45),
-            ),
-            body: MessageListBody(userID: uid)
-    );
+    return MessageListBody(userID: uid);
   }
 }
 

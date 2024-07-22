@@ -1,5 +1,3 @@
-import 'package:art_portfolio/pages/messagesPage.dart';
-import 'package:art_portfolio/pages/userPage.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -9,9 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'pages/portfolioLogin.dart';
 
-import 'pages/galleryPage.dart';
-import 'pages/userLookupPage.dart';
-import 'pages/userPage.dart';
+import 'portFolioRouting.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,20 +27,7 @@ class TaskApp extends StatelessWidget {
     const titleText = "Mobile App Final";
     const appBarText = "Portfolio Post";
 
-    return MaterialApp(
-      title: titleText,
-      theme: ThemeData(
-        primaryColor: const Color.fromARGB(255, 24, 132, 255),
-        colorScheme: ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 24, 132, 255),
-                                          brightness: Brightness.light,),
-        useMaterial3: true,
-      ),
-      home: Scaffold(
-            resizeToAvoidBottomInset : false,
-            appBar: AppBar(title: const Text(appBarText),
-                           backgroundColor: Colors.indigo[100]),
-            body: const GalleryRedirect()),
-    );
+    return const GalleryRedirect();
   }
 }
 
@@ -69,7 +52,7 @@ class GalleryRedirect extends StatelessWidget {
 
           //Go to landing page if logged in
           //Can replace gallery page with anything else to get to landing w/ menu bar
-          return const UserPage(userID: '');//const MessagesListPage(); //const UserPage(userID: '');
+          return const PortfolioRouting();//UserPage(userID: '');//const MessagesListPage(); //const UserPage(userID: '');
         }
     );
   }

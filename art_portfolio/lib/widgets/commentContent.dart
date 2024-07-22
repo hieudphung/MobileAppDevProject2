@@ -288,7 +288,7 @@ class CommentCard extends StatelessWidget {
 
     //Get the user before building
     return FutureBuilder <UserGalleryInfo>(
-      future: GalleryStoreService.instance.getUser(comment.userID),
+      future: GalleryStoreService.instance.getUserByUserID(comment.userID),
       builder: (BuildContext context, AsyncSnapshot<UserGalleryInfo> userComment) {
         if (userComment.hasData) {
 

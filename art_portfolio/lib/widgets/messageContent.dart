@@ -193,7 +193,7 @@ class MessageUserRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: GalleryStoreService.instance.getUser(userID),
+      future: GalleryStoreService.instance.getUserByUserID(userID),
         builder: (context, AsyncSnapshot<UserGalleryInfo> snapshot) {
           if (snapshot.hasData) {
             //streamSnapshot.data!;

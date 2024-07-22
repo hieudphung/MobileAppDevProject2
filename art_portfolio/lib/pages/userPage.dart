@@ -129,8 +129,8 @@ class UserUploads extends StatelessWidget {
       child: Column(
         children: <Widget>[
           const Text('Uploads'),
-          Expanded(child: UserUploadsList(userID: userID, limitedDisplay: true, isUser: isUser)),
-          MoreUploads(userID: userID)
+          Expanded(flex: 2, child: UserUploadsList(userID: userID, limitedDisplay: true, isUser: isUser)),
+          Expanded(child: MoreUploads(userID: userID))
         ]
       )
     );
@@ -150,8 +150,8 @@ class UserFavorites extends StatelessWidget {
       child: Column(
         children: <Widget>[
           const Text('Favorites'),
-          Expanded(child: FavoritesList(userID: userID, limitedDisplay: true)),
-          MoreFavorites(userID: userID)
+          Expanded(flex: 2, child: FavoritesList(userID: userID, limitedDisplay: true)),
+          Expanded(child: MoreFavorites(userID: userID))
         ]
       )
     );

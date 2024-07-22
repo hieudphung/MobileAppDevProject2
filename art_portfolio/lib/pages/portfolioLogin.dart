@@ -3,6 +3,29 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import './signUp.dart';
 
+class LoginPage extends StatelessWidget {
+  const LoginPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return MaterialApp(
+      title: 'Portfolio App',
+      theme: ThemeData(
+        primaryColor: const Color.fromARGB(255, 24, 132, 255),
+        colorScheme: ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 24, 132, 255),
+                                          brightness: Brightness.light,),
+        useMaterial3: true,
+      ),
+      home: Scaffold(
+            resizeToAvoidBottomInset : false,
+            appBar: AppBar(title: const Text('Porfolio Login'),
+                           backgroundColor: Colors.indigo[100]),
+            body: PortfolioLogin()),
+    );
+  }
+}
+
 class PortfolioLogin extends StatefulWidget {
   PortfolioLogin({super.key});
 
