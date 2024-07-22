@@ -38,7 +38,7 @@ class UploadsListPage extends StatelessWidget {
     DefaultTabController(
             length: 1,
             child: Scaffold(
-            appBar: AppBar(title: const Text('Friend\'s List'),
+            appBar: AppBar(title: const Text('Uploads List'),
                            backgroundColor: const Color.fromARGB(255, 79, 255, 240),
                            bottom: const TabBar(
                             tabs: [

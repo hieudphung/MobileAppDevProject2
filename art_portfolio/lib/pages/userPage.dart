@@ -15,22 +15,11 @@ class UserPageMaterial extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    const titleText = "Mobile App Final";
-    const appBarText = "Portfolio Post";
-
-    return MaterialApp(
-      title: titleText,
-      theme: ThemeData(
-        primaryColor: const Color.fromARGB(255, 24, 132, 255),
-        colorScheme: ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 24, 132, 255),
-                                          brightness: Brightness.light,),
-        useMaterial3: true,
-      ),
-      home: Scaffold(
+    return Scaffold(
             resizeToAvoidBottomInset : false,
-            appBar: AppBar(title: const Text(appBarText),
+            appBar: AppBar(title: const Text("User Page"),
                            backgroundColor: Colors.indigo[100]),
-            body: UserPage(userID: userID)),
+            body: UserPage(userID: userID)
     );
   }
 }

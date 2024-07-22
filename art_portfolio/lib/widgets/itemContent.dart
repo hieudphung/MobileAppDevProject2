@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../database/galleryStoreService.dart';
+import 'commentContent.dart';
 
 class ItemImage extends StatelessWidget {
   const ItemImage ({super.key,
@@ -103,7 +104,9 @@ class SetButtons extends StatelessWidget {
       return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      FavoriteCount(imageID: imageID),
+                      const Flexible(child: Padding(padding: EdgeInsets.fromLTRB(7.0,0.0,1.0,0), child: Text('By: '))),
+                      Flexible(flex: 2, child: CommentUserRow(userID: creatorID)),
+                      Flexible(child: FavoriteCount(imageID: imageID)),
                       IconButton(
                         icon: const Icon(Icons.edit_document),
                         onPressed: () => showImageEditDialog(context)),
@@ -116,7 +119,9 @@ class SetButtons extends StatelessWidget {
         return Row(
                     //mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
-                      FavoriteCount(imageID: imageID),
+                      const Flexible(child: Padding(padding: EdgeInsets.fromLTRB(7.0,0.0,1.0,0), child: Text('By: '))),
+                      Flexible(flex: 2, child: CommentUserRow(userID: creatorID)),
+                      Flexible(child: FavoriteCount(imageID: imageID)),
                     ],);
   }
 }
@@ -267,6 +272,7 @@ class FavoriteCount extends StatelessWidget {
                   children: <Widget>[
                     IconButton(
                           icon: const Icon(Icons.favorite),
+                          color: (hasFavorite) ? Colors.pink[300] : Colors.grey[700],
                           onPressed: () async => addToFavorites(context, hasFavorite, currentUser.uid, existingID)),
                     Text('$totalFavorites'),
                   ],);

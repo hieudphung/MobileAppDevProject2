@@ -219,7 +219,7 @@ class CommentUserRow extends StatelessWidget {
                   Expanded(child: Padding(padding: const EdgeInsets.all(1), child: Text(snapshot.data!.username, textAlign: TextAlign.left,))),
                 ]
               ),
-              onTap: () => {goToProfileTemp(context, snapshot.data!.id)}
+              onTap: () => {goToProfileTemp(context, userID)}
               );
             } else {
               return const Text("No user here!");
