@@ -335,8 +335,6 @@ class UserRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(userID);
-
     return FutureBuilder(
       future: GalleryStoreService.instance.getUser(userID),
         builder: (context, AsyncSnapshot<UserGalleryInfo> snapshot) {
@@ -366,8 +364,8 @@ class UserRow extends StatelessWidget {
                            AvatarImage(avatarSrc: '', size: 46.0, padding: 14.0),
                            Expanded(child: Padding(padding: EdgeInsets.all(1.5), child: Text('Blank User', textAlign: TextAlign.left,))),
             ]
-          );
-        },
+        );
+      },
     );
   }
 }

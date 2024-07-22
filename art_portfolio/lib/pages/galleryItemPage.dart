@@ -42,19 +42,20 @@ class GalleryItemBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Expanded(
+      child: Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
     Align(
       alignment: Alignment.topCenter,
       child: userBar(),
     ),
-    Expanded(flex: 2, child: ItemImage(imageSrc: src),),
-    Flexible(child: SetButtons(imageID: imageID, creatorID: creatorID, oldTitle: title, oldDescription: description)),
-    Flexible(child: DescriptionBox(imageDescription: description)),
-    Flexible(child: CommentForm(imageID: imageID)),
-    Expanded(child: CommentBox(imageID: imageID, creatorID: creatorID)),
+    Expanded(flex: 4, child: ItemImage(imageSrc: src),),
+    Expanded(flex: 1, child: SetButtons(imageID: imageID, creatorID: creatorID, oldTitle: title, oldDescription: description)),
+    Expanded(flex: 1, child: DescriptionBox(imageDescription: description)),
+    Expanded(flex: 1, child: CommentForm(imageID: imageID)),
+    Expanded(flex: 5, child: CommentBox(imageID: imageID, creatorID: creatorID)),
       ],
-    );
+    ));
   }
 }

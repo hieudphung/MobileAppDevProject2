@@ -24,9 +24,6 @@ class TaskApp extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    const titleText = "Mobile App Final";
-    const appBarText = "Portfolio Post";
-
     return const GalleryRedirect();
   }
 }
@@ -52,7 +49,7 @@ class GalleryRedirect extends StatelessWidget {
 
           //Go to landing page if logged in
           //Can replace gallery page with anything else to get to landing w/ menu bar
-          return const PortfolioRouting();//UserPage(userID: '');//const MessagesListPage(); //const UserPage(userID: '');
+          return const PortfolioRouting();
         }
     );
   }

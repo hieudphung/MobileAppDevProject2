@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../common/common.dart';
 import '../model/comment.dart';
 import '../model/user.dart';
 
@@ -193,6 +194,49 @@ class CommentBox extends StatelessWidget {
   }
 }
 
+class CommentUserRow extends StatelessWidget {
+  const CommentUserRow({super.key,
+  required this.userID});
+
+  final String userID;
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: GalleryStoreService.instance.getUserByUserID(userID),
+        builder: (context, AsyncSnapshot<UserGalleryInfo> snapshot) {
+          if (snapshot.hasData) {
+            //streamSnapshot.data!;
+
+            if (snapshot.data != null) {
+              //FIGURE OUT LAST STUFF:
+              //ADDING THE SECONDARY LIST
+              return 
+              GestureDetector(
+              child: Row(
+                children: <Widget>[
+                  AvatarImage(avatarSrc: snapshot.data!.avatar, size: 28.0, padding: 6.0),
+                  Expanded(child: Padding(padding: const EdgeInsets.all(1), child: Text(snapshot.data!.username, textAlign: TextAlign.left,))),
+                ]
+              ),
+              onTap: () => {goToProfileTemp(context, snapshot.data!.id)}
+              );
+            } else {
+              return const Text("No user here!");
+            }
+          }
+
+          return const Row(
+                children: <Widget>[
+                           AvatarImage(avatarSrc: '', size: 28.0, padding: 6.0),
+                           Expanded(child: Padding(padding: EdgeInsets.all(1), child: Text('Blank User', textAlign: TextAlign.left,))),
+            ]
+        );
+      },
+    );
+  }
+}
+
 class CommentCard extends StatelessWidget {
   const CommentCard({super.key,
     required this.comment,
@@ -292,7 +336,7 @@ class CommentCard extends StatelessWidget {
       builder: (BuildContext context, AsyncSnapshot<UserGalleryInfo> userComment) {
         if (userComment.hasData) {
 
-          UserGalleryInfo userInfo = userComment.data!;
+          //UserGalleryInfo userInfo = userComment.data!;
 
           //also check whether or not the user ID is the same as the token, or if user ID is the same as the image creator's ID, to show
           if (currentUser.uid == comment.userID) {
@@ -300,7 +344,8 @@ class CommentCard extends StatelessWidget {
               child: 
               Column(
                 children: <Widget>[
-                    Text('${userInfo.username}: ${comment.comment}'),
+                    CommentUserRow(userID: creatorID),
+                    Text(comment.comment),
                     Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
@@ -316,12 +361,13 @@ class CommentCard extends StatelessWidget {
             );
 
             //Under a creator's work
-          } else if (currentUser.uid == creatorID) {
+          } else {
             return Card(
               child: 
               Column(
                 children: <Widget>[
-                  Text('${userInfo.username}: ${comment.comment}'),
+                  CommentUserRow(userID: comment.userID),
+                  Text(comment.comment),
                   Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
@@ -332,16 +378,7 @@ class CommentCard extends StatelessWidget {
                 ]
               )
             );
-          } else {
-            return Card(
-              child: 
-              Column(
-                children: <Widget>[
-                  Text('${userInfo.username}: ${comment.comment}'),
-                ]
-              )
-            );
-          }
+          } 
         }
 
         return const Text('Loading comment...');
