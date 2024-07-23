@@ -359,6 +359,26 @@ class GalleryStoreService {
     });
   }
 
+  Future<void> acceptFriendRequest(String requestID) async {
+    CollectionReference friends = await instance.friends;
+    CollectionReference friendRequests = await instance.friendRequests;
+
+    await friendRequests.doc(requestID).get().then(
+      (value) async {
+        var data = value.data();
+        //print(data as Map);
+        Map mappedData = data as Map;
+
+        addFriendLink(
+          mappedData['requestee'],
+          mappedData['recipient']
+        );
+      }
+    );
+
+    await friendRequests.doc(requestID).delete();
+  }
+
   Future<void> deleteFriendRequest(String requestID) async {
     CollectionReference friendRequests = await instance.friendRequests;
 

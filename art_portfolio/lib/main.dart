@@ -44,7 +44,7 @@ class GalleryRedirect extends StatelessWidget {
           }
 
           if (!streamSnapshot.hasData) {
-            return PortfolioLogin();
+            return const LoginPage();
           }
 
           //Go to landing page if logged in

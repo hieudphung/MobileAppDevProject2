@@ -216,7 +216,7 @@ class FriendRequestList extends StatelessWidget {
 
                   if (documentSnapshot['recipient'] == userID) {
                     //return an incoming friend request
-                    return RequestRow(senderID: documentSnapshot['requestee']);
+                    return RequestRow(senderID: documentSnapshot['requestee'], requestID: documentSnapshot.id);
                   } else if (documentSnapshot['requestee'] == userID) {
                     return SendRow(recipientID: documentSnapshot['recipient']);
                   }
@@ -240,16 +240,18 @@ class FriendRequestList extends StatelessWidget {
 
 class RequestRow extends StatelessWidget {
   const RequestRow({super.key,
-  required this.senderID});
+  required this.senderID,
+  required this.requestID});
 
   final String senderID;
+  final String requestID;
 
-  void showRequestForm(BuildContext context) {
-    print('accept friend request?');
+  Future<void> showRequestForm(BuildContext context) async {
+    await GalleryStoreService.instance.acceptFriendRequest(requestID);
   }
 
-  void showDeclineForm(BuildContext context) {
-    print('decline friend request?');
+  Future<void> showDeclineForm(BuildContext context) async {
+    await GalleryStoreService.instance.deleteFriendRequest(requestID);
   }
 
   @override
@@ -270,8 +272,8 @@ class RequestRow extends StatelessWidget {
                   AvatarImage(avatarSrc: snapshot.data!.avatar, size: 46.0, padding: 14.0),
                   Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: Text(snapshot.data!.username, textAlign: TextAlign.left,))),
                   const Expanded(child: Padding(padding: EdgeInsets.all(1.5), child: Text('Incoming', textAlign: TextAlign.right,))),
-                  Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: IconButton(icon: const Icon(Icons.check), onPressed: () {showRequestForm(context);}))),
-                  Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: IconButton(icon: const Icon(Icons.cancel), onPressed: () {showDeclineForm(context);})))
+                  Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: IconButton(icon: const Icon(Icons.check), onPressed: () async {await showRequestForm(context);}))),
+                  Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: IconButton(icon: const Icon(Icons.cancel), onPressed: () async {await showDeclineForm(context);})))
                 ]
               ),
               onTap: () => {goToProfileTemp(context, senderID)}
