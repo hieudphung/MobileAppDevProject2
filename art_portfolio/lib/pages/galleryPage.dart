@@ -77,7 +77,7 @@ class GalleryAndSearchState extends State<GalleryAndSearch> {
                 Flexible(
                   child: IconButton.filledTonal(
                     icon: const Icon(Icons.search),
-                    color: Colors.green,
+                    color: const Color.fromARGB(255, 162, 255, 0),
                     tooltip: "Add Task",
                     onPressed: () {
                       if (widget._taskFormKey.currentState!.validate()) {

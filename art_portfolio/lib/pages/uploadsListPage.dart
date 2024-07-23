@@ -19,7 +19,7 @@ class UploadsListPage extends StatelessWidget {
             length: 2,
             child: Scaffold(
             appBar: AppBar(title: const Text('Uploads List'),
-                           backgroundColor: const Color.fromARGB(255, 79, 255, 240),
+                           backgroundColor: const Color.fromARGB(255, 69, 188, 176),
                            bottom: const TabBar(
                             tabs: [
                               Tab(child: Text('Uploads')),
@@ -39,7 +39,7 @@ class UploadsListPage extends StatelessWidget {
             length: 1,
             child: Scaffold(
             appBar: AppBar(title: const Text('Uploads List'),
-                           backgroundColor: const Color.fromARGB(255, 79, 255, 240),
+                           backgroundColor: const Color.fromARGB(255, 69, 188, 176),
                            bottom: const TabBar(
                             tabs: [
                               Tab(child: Text('Uploads'))

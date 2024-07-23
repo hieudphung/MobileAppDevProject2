@@ -18,7 +18,7 @@ class UserPageMaterial extends StatelessWidget {
     return Scaffold(
             resizeToAvoidBottomInset : false,
             appBar: AppBar(title: const Text("User Page"),
-                           backgroundColor: Colors.indigo[100]),
+                           backgroundColor: const Color.fromARGB(255, 69, 188, 176)),
             body: UserPage(userID: userID)
     );
   }

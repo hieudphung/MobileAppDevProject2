@@ -67,7 +67,7 @@ class MessagePage extends StatelessWidget {
     //assumed can only be accessed by the user anyways, not others
     return Scaffold(
             appBar: AppBar(title: const Text('Messages'),
-                           backgroundColor: Color.fromARGB(255, 255, 168, 45),
+                           backgroundColor: const Color.fromARGB(255, 45, 255, 115),
             ),
             body: MessageBody(senderID: finalSender,
                               receiverID: finalReceiver,
@@ -127,7 +127,7 @@ class ComposeMessagePage extends StatelessWidget {
     //assumed can only be accessed by the user anyways, not others
     return Scaffold(
             appBar: AppBar(title: const Text('New Message'),
-                           backgroundColor: Color.fromARGB(255, 255, 168, 45),
+                           backgroundColor: const Color.fromARGB(255, 45, 255, 115),
             ),
             body: ComposeMessageBody(
                               senderID: uid,

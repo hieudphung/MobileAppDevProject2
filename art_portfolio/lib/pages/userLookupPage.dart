@@ -44,11 +44,11 @@ class UsersAndSearchState extends State<UsersAndSearch> {
     if (_userSearchFormKey.currentState!.validate()) {
         if (searchForm.isEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('No search, getting recent...')),
+          const SnackBar(content: Text('No search, getting recent users...')),
           );
         } else {
             ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Searching...')),
+            const SnackBar(content: Text('Searching users...')),
             );
           }
       }
@@ -89,8 +89,8 @@ class UsersAndSearchState extends State<UsersAndSearch> {
                 Flexible(
                   child: IconButton.filledTonal(
                     icon: const Icon(Icons.search),
-                    color: Colors.green,
-                    tooltip: "Add Task",
+                    color: const Color.fromARGB(255, 162, 255, 0),
+                    tooltip: "Search User",
                     onPressed: () {
                       doSearch();
                     },

@@ -14,7 +14,7 @@ class FavoritesListPage extends StatelessWidget {
             length: 1,
             child: Scaffold(
             appBar: AppBar(title: const Text('Favorites'),
-                           backgroundColor: Color.fromARGB(255, 79, 255, 158),
+                           backgroundColor: const Color.fromARGB(255, 69, 188, 176),
                            bottom: const TabBar(
                             tabs: [
                               Tab(child: Text('Favorites')),

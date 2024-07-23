@@ -15,6 +15,25 @@ class PortfolioRouting extends StatelessWidget {
       title: 'Art Portfolio',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        colorScheme: ColorScheme.fromSwatch(
+          primarySwatch: Colors.teal, // Adjust primarySwatch to match your design
+        ),
+        scaffoldBackgroundColor:  const Color.fromARGB(255, 173, 238, 232), // Scaffold background color
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color.fromARGB(255, 69, 188, 176), // App bar background color
+          titleTextStyle: TextStyle(
+            color: Color.fromARGB(255, 20, 20, 20),
+            fontWeight: FontWeight.bold, // App bar title text weight
+            fontSize: 20.0, // App bar title text size
+          ),
+        ),
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          backgroundColor: Colors.blueGrey[800], // Bottom navigation bar background color
+          selectedItemColor: const Color.fromARGB(255, 225, 255, 72), // Selected item color
+          unselectedItemColor: Colors.white, // Unselected item color
+          selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
+          unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal),
+        ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       routes: {

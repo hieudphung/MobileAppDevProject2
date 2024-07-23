@@ -18,7 +18,7 @@ class FriendsListPage extends StatelessWidget {
             length: 2,
             child: Scaffold(
             appBar: AppBar(title: const Text('Friend\'s List'),
-                           backgroundColor: const Color.fromARGB(255, 79, 255, 240),
+                           backgroundColor: const Color.fromARGB(255, 69, 188, 176),
                            bottom: const TabBar(
                             tabs: [
                               Tab(child: Text('Friends')),
@@ -38,7 +38,7 @@ class FriendsListPage extends StatelessWidget {
             length: 1,
             child: Scaffold(
             appBar: AppBar(title: const Text('Friend\'s List'),
-                           backgroundColor: const Color.fromARGB(255, 79, 255, 240),
+                           backgroundColor: const Color.fromARGB(255, 69, 188, 176),
                            bottom: const TabBar(
                             tabs: [
                               Tab(child: Text('Friends'))

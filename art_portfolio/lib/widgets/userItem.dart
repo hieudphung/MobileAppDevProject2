@@ -57,7 +57,7 @@ class UserName extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Flexible(child: Row(
+    return Expanded(child: Row(
       children: <Widget>[
         Padding(padding: const EdgeInsets.all(8.0), child: ClipRRect(
           borderRadius: BorderRadius.circular(25.0),
