@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../common/common.dart';
 import '../pages/friendsListPage.dart';
+import '../pages/messagesPage.dart';
 
 class UserCard extends StatelessWidget {
   const UserCard({super.key,
@@ -26,7 +27,7 @@ class UserCard extends StatelessWidget {
                 return Column(
                 children: 
                 <Widget>[
-                  UserName(name: streamSnapshot.data!.docs[0]['username'], avatarLink: streamSnapshot.data!.docs[0]['avatarSrc']),
+                  UserName(name: streamSnapshot.data!.docs[0]['username'], avatarLink: streamSnapshot.data!.docs[0]['avatarSrc'], userID: userID),
                   UserAbout(description: streamSnapshot.data!.docs[0]['about']),
                 ],
               );
@@ -46,23 +47,50 @@ class UserCard extends StatelessWidget {
 class UserName extends StatelessWidget {
   const UserName({super.key,
   required this.name,
-  required this.avatarLink
+  required this.avatarLink,
+  required this.userID
   });
 
   final String name;
   final String avatarLink;
+  final String userID;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      
+    return Flexible(child: Row(
       children: <Widget>[
         Padding(padding: const EdgeInsets.all(8.0), child: ClipRRect(
-          borderRadius: BorderRadius.circular(37.5),
-          child: Image.network(avatarLink, height: 75.0, width: 75.0))),
-        Expanded(child: Text(name, textAlign: TextAlign.center,))
+          borderRadius: BorderRadius.circular(25.0),
+          child: Image.network(avatarLink, height: 50.0, width: 50.0))),
+        Expanded(
+          child: 
+            Column(
+              children: <Widget> [
+                Expanded(child: Text(name, textAlign: TextAlign.center,)),
+                Expanded(child: 
+                  Row(
+                    children: <Widget> [
+                      const Expanded(child: Text('Uploads: ')),
+                      Expanded(child: 
+                        StreamBuilder(
+                          stream: GalleryStoreService.instance.getUserGalleryStream(userID),
+                          builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+                            if (streamSnapshot.hasData) {
+                              int docSize = streamSnapshot.data!.size;
+
+                              return Text('$docSize');
+                            }
+
+                            return const Text('0');
+                          }
+                      )),
+                    ]
+                )),
+              ]
+          )
+        )
       ]
-    );
+    ));
   }
 }
 
@@ -252,7 +280,7 @@ class _UserEditDetailFormState extends State<UserEditForm> {
   }
 }
 
-class OtherUsers extends StatelessWidget {
+class OtherUsers extends StatefulWidget {
   const OtherUsers({super.key,
   required this.otherUserID,
   required this.userID
@@ -260,28 +288,80 @@ class OtherUsers extends StatelessWidget {
 
   final String otherUserID;
   final String userID;
+  
+  void _sendFriendRequestDialog(BuildContext context, bool sendDebounce) {
+    if (!sendDebounce) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Send this user a friend request?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('No'),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            TextButton(
+              child: const Text('Yes'),
+              onPressed: () async {
+                // Adding to provider
+                GalleryStoreService.instance.addFriendRequest(userID, otherUserID);
+
+                // Handle adding new goal
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      },
+    );
+    }
+  }
+
+  void _goToSendMessage(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ComposeMessagePage(receiverID: otherUserID, title: '')));
+  }
+
+  @override
+  State<OtherUsers> createState() => OtherUsersState();
+}
+
+class OtherUsersState extends State<OtherUsers> {
+  bool hasSent = false;
 
   @override
   Widget build(BuildContext context) {
     //determine if friends
     return 
     FutureBuilder <bool>(
-      future: GalleryStoreService.instance.areUsersFriends(userID, otherUserID),
+      future: GalleryStoreService.instance.areUsersFriends(widget.userID, widget.otherUserID),
       builder: (context, AsyncSnapshot<bool> snapshot) {
       if (snapshot.hasData) {
         if (!snapshot.data!) {
-          Padding(
+          return Padding(
           padding: const EdgeInsets.all(8.0), 
           child: Align(
           alignment: Alignment.bottomRight,
-          child: IconButton(
+          child: Row(
+            children: <Widget> [
+          IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
-              print('send friend request...');
+              widget._sendFriendRequestDialog(context, hasSent);
             },
-          ))); 
-        } else {
-          print('already friends!');
+          ),
+          IconButton(
+            icon: const Icon(Icons.message),
+            onPressed: () {
+              widget._goToSendMessage(context);
+            },
+          ),
+          ]
+        ))); 
         }
       }
 
@@ -290,9 +370,21 @@ class OtherUsers extends StatelessWidget {
         padding: const EdgeInsets.all(8.0), 
         child: Align(
         alignment: Alignment.bottomRight,
-        child: IconButton(
-          icon: const Icon(Icons.add),
-          onPressed: () {},
+        child: Row(
+            children: <Widget> [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              print('already friends!');
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.message),
+            onPressed: () {
+              widget._goToSendMessage(context);
+            },
+          ),
+          ]
         )));
       }
     );

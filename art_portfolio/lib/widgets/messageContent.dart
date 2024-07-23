@@ -79,7 +79,7 @@ class MessageRecieveRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: GalleryStoreService.instance.getUser(senderID),
+      future: GalleryStoreService.instance.getUserByUserID(senderID),
         builder: (context, AsyncSnapshot<UserGalleryInfo> snapshot) {
           if (snapshot.hasData) {
             //streamSnapshot.data!;
@@ -144,7 +144,7 @@ class MessageForwardRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: GalleryStoreService.instance.getUser(forwardID),
+      future: GalleryStoreService.instance.getUserByUserID(forwardID),
         builder: (context, AsyncSnapshot<UserGalleryInfo> snapshot) {
           if (snapshot.hasData) {
             //streamSnapshot.data!;

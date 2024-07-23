@@ -133,9 +133,9 @@ class FriendRow extends StatelessWidget {
             ),
             TextButton(
               child: const Text('Yes'),
-              onPressed: () async {
+              onPressed: () {
                 // Adding to provider
-                await unfriend();
+                unfriend();
 
                 // Handle adding new goal
                 Navigator.of(context).pop();

@@ -12,14 +12,14 @@ class UserLookupPage extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
     Align(
       alignment: Alignment.topCenter,
       child: userBar(),
     ),
-    const Expanded(
+    Expanded(
         flex: 9,
         child: 
           UsersAndSearch(),

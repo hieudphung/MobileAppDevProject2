@@ -16,6 +16,9 @@ class CustomMenuBar extends StatelessWidget {
           case 'Gallery':
             iconData = Icons.photo;
             break;
+          case 'Users':
+            iconData = Icons.people;
+            break;
           case 'Profile':
             iconData = Icons.person;
             break;
@@ -25,10 +28,11 @@ class CustomMenuBar extends StatelessWidget {
           default:
             iconData = Icons.photo;
         }
+
         return BottomNavigationBarItem(
           icon: Icon(iconData),
           label: menuItems[index],
-          backgroundColor: Color.fromARGB(255, 3, 89, 82),
+          backgroundColor: const Color.fromARGB(255, 3, 89, 82),
         );
       }),
       currentIndex: currentIndex,

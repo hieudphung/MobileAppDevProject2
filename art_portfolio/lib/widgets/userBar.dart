@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../database/galleryStoreService.dart';
 
 class userBar extends StatelessWidget{
-  userBar({super.key});
+  const userBar({super.key});
 
   Future<void> _logout() async {
     await FirebaseAuth.instance.signOut();
@@ -33,8 +33,8 @@ class userBar extends StatelessWidget{
             flex: 1,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-              child: OutlinedButton(
-                child: const Text('Logout'),
+              child: IconButton(
+                icon: const Icon(Icons.logout),
                 onPressed: () async {
                   _logout();
                 },
@@ -42,15 +42,27 @@ class userBar extends StatelessWidget{
             )
           ),
           Expanded(
-            flex: 2,
+            flex: 3,
             child: FutureBuilder <String> (
               future: getDisplayName(),
               builder: (BuildContext context, AsyncSnapshot<String> name) {
                 if (name.hasData) {
-                  return Text('Logged in as: ${name.data!}');
+                  return Padding(
+                            padding: const EdgeInsets.fromLTRB(15, 5, 25, 5), 
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: Text('Logged in as: ${name.data!}')
+                            )
+                  );
                 }
                 
-                return const Text('Loading...');
+                return const Padding(
+                            padding: EdgeInsets.fromLTRB(15, 5, 25, 5), 
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: Text('Loading...')
+                            )
+                );
               }
             )
           ),

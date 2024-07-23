@@ -40,7 +40,7 @@ class UserPage extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-    Align(
+    const Align(
       alignment: Alignment.topCenter,
       child: userBar(),
     ),

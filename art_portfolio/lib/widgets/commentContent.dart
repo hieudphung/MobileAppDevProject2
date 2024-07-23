@@ -344,7 +344,7 @@ class CommentCard extends StatelessWidget {
               child: 
               Column(
                 children: <Widget>[
-                    CommentUserRow(userID: creatorID),
+                    CommentUserRow(userID: comment.userID),
                     Text(comment.comment),
                     Row(
                     mainAxisAlignment: MainAxisAlignment.end,

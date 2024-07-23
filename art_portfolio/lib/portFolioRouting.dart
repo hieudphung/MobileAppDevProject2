@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'pages/galleryPage.dart';
 import 'pages/messagesPage.dart';
+import 'pages/userLookupPage.dart';
 import 'pages/userPage.dart';
 import 'widgets/menubar.dart';
 
@@ -18,6 +19,7 @@ class PortfolioRouting extends StatelessWidget {
       ),
       routes: {
         '/': (context) => const ToMainPage(),
+        '/users': (context) => const UserLookupPage(),
         '/profile': (context) => const UserPage(userID: ''),
         '/messages': (context) => const MessagesListPage(),
       },
@@ -38,6 +40,7 @@ class _ToMainPageState extends State<ToMainPage> {
 
   static final List<Widget> _widgetOptions = <Widget>[
     const GalleryPage(),
+    const UserLookupPage(),
     const UserPage(userID: ''),
     const MessagesListPage(),
   ];
@@ -58,7 +61,7 @@ class _ToMainPageState extends State<ToMainPage> {
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: CustomMenuBar(
-        menuItems: const ['Gallery', 'Profile', 'Messages'],
+        menuItems: const ['Gallery', 'Users', 'Profile', 'Messages'],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
       ),

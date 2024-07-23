@@ -325,7 +325,9 @@ class GalleryStoreService {
       (value) {
         //enough to signify friend link exists
         //lazy implementation but still
-        areFriends = true;
+        if (value.size > 0) {
+          areFriends = true;
+        }
       }
     );
 
@@ -346,6 +348,21 @@ class GalleryStoreService {
     Stream<QuerySnapshot<Object?>> snapshots = friends.where('link', arrayContainsAny: [uid]).snapshots();
 
     yield* snapshots;
+  }
+
+  Future<void> addFriendRequest(String senderID, String receiverID) async {
+    CollectionReference friendRequests = await instance.friendRequests;
+
+    await friendRequests.add({
+      "requestee" : senderID,
+      "recipient" : receiverID
+    });
+  }
+
+  Future<void> deleteFriendRequest(String requestID) async {
+    CollectionReference friendRequests = await instance.friendRequests;
+
+    await friendRequests.doc(requestID).delete();
   }
 
   Stream<QuerySnapshot<Object?>> getFriendRequests(String uid) async* {
