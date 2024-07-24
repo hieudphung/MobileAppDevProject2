@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../common/styling.dart';
 import '../widgets/uploadContent.dart';
 
 class UploadsListPage extends StatelessWidget {
@@ -18,7 +19,7 @@ class UploadsListPage extends StatelessWidget {
           DefaultTabController(
             length: 2,
             child: Scaffold(
-            appBar: AppBar(title: const Text('Uploads List'),
+            appBar: AppBar(title: const Text('Uploads List', style: AppTextStyles.headline2),
                            backgroundColor: const Color.fromARGB(255, 69, 188, 176),
                            bottom: const TabBar(
                             tabs: [
@@ -38,7 +39,7 @@ class UploadsListPage extends StatelessWidget {
     DefaultTabController(
             length: 1,
             child: Scaffold(
-            appBar: AppBar(title: const Text('Uploads List'),
+            appBar: AppBar(title: const Text('Uploads List', style: AppTextStyles.headline2),
                            backgroundColor: const Color.fromARGB(255, 69, 188, 176),
                            bottom: const TabBar(
                             tabs: [

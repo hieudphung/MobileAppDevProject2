@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../common/styling.dart';
 import '../widgets/favoriteContent.dart';
 
 class FavoritesListPage extends StatelessWidget {
@@ -13,7 +14,7 @@ class FavoritesListPage extends StatelessWidget {
     return DefaultTabController(
             length: 1,
             child: Scaffold(
-            appBar: AppBar(title: const Text('Favorites'),
+            appBar: AppBar(title: const Text('Favorites', style: AppTextStyles.headline2),
                            backgroundColor: const Color.fromARGB(255, 69, 188, 176),
                            bottom: const TabBar(
                             tabs: [

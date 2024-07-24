@@ -164,7 +164,7 @@ class _PortfolioLoginState extends State<PortfolioLogin> {
                   }
                 }
               },
-              child: const Text("Login", style: AppTextStyles.bodyText),
+              child: const Text("Login"),
             ),
           ),
         ]
@@ -182,7 +182,7 @@ class _PortfolioLoginState extends State<PortfolioLogin> {
                 onPressed: () {
                   _goToSignupPage();
                 },
-                child: const Text("Sign Up", style: AppTextStyles.bodyText),
+                child: const Text("Sign Up"),
               ),
             ),
           ),

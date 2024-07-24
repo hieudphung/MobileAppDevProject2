@@ -127,7 +127,7 @@ class ComposeMessagePage extends StatelessWidget {
 
     //assumed can only be accessed by the user anyways, not others
     return Scaffold(
-            appBar: AppBar(title: const Text('New Message', style: AppTextStyles.headline1),
+            appBar: AppBar(title: const Text('New Message', style: AppTextStyles.headline2),
                            backgroundColor: AppColors.appBarColor,
             ),
             body: ComposeMessageBody(
