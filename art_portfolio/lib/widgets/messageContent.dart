@@ -4,6 +4,7 @@ import 'package:art_portfolio/model/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import '../common/styling.dart';
 import '../pages/messagesPage.dart';
 
 class MessagesList extends StatelessWidget {
@@ -40,7 +41,7 @@ class MessagesList extends StatelessWidget {
                   }
                 );
               } else {
-                return const Text("No messages!");
+                return const Text("No messages!", style: AppTextStyles.bodyText);
             }
           }
 
@@ -92,23 +93,23 @@ class MessageRecieveRow extends StatelessWidget {
               child: Row(
                 children: <Widget>[
                   AvatarImage(avatarSrc: snapshot.data!.avatar, size: 46.0, padding: 14.0),
-                  Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: Text(snapshot.data!.username, textAlign: TextAlign.left,))),
-                  Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: Text(title, textAlign: TextAlign.right,))),
+                  Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: Text(snapshot.data!.username, textAlign: TextAlign.left, style: AppTextStyles.bodyText))),
+                  Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: Text(title, textAlign: TextAlign.right, style: AppTextStyles.bodyText))),
                   Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: IconButton(icon: const Icon(Icons.read_more), onPressed: () {goToRead(context);}))),
                 ]
               ),
               onTap: () => {goToProfileTemp(context, senderID)}
               );
             } else {
-              return const Text("No user here!");
+              return const Text("No user here!", style: AppTextStyles.bodyText);
             }
           }
 
           return Row(
                 children: <Widget>[
                             const AvatarImage(avatarSrc: '', size: 46.0, padding: 14.0),
-                            const Expanded(child: Padding(padding: EdgeInsets.all(1.5), child: Text('Blank User', textAlign: TextAlign.left,))),
-                            Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: Text(title, textAlign: TextAlign.right,))),
+                            const Expanded(child: Padding(padding: EdgeInsets.all(1.5), child: Text('Blank User', textAlign: TextAlign.left, style: AppTextStyles.bodyText))),
+                            Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: Text(title, textAlign: TextAlign.right, style: AppTextStyles.bodyText))),
                             Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: IconButton(icon: const Icon(Icons.read_more), onPressed: () {goToRead(context);}))),
             ]
           );
@@ -157,23 +158,23 @@ class MessageForwardRow extends StatelessWidget {
               child: Row(
                 children: <Widget>[
                             AvatarImage(avatarSrc: snapshot.data!.avatar, size: 46.0, padding: 14.0),
-                            Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: Text(snapshot.data!.username, textAlign: TextAlign.left,))),
-                            Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: Text(title, textAlign: TextAlign.right,))),
+                            Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: Text(snapshot.data!.username, textAlign: TextAlign.left, style: AppTextStyles.bodyText))),
+                            Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: Text(title, textAlign: TextAlign.right, style: AppTextStyles.bodyText))),
                             Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: IconButton(icon: const Icon(Icons.read_more), onPressed: () {goToRead(context);}))),
                 ]
               ),
               onTap: () => {goToProfileTemp(context, forwardID)}
               );
             } else {
-              return const Text("No user here!");
+              return const Text("No user here!", style: AppTextStyles.bodyText);
             }
           }
  
           return Row(
                 children: <Widget>[
                             const AvatarImage(avatarSrc: '', size: 46.0, padding: 14.0),
-                            const Expanded(child: Padding(padding: EdgeInsets.all(1.5), child: Text('Blank User', textAlign: TextAlign.left,))),
-                            Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: Text(title, textAlign: TextAlign.right,))),
+                            const Expanded(child: Padding(padding: EdgeInsets.all(1.5), child: Text('Blank User', textAlign: TextAlign.left, style: AppTextStyles.bodyText))),
+                            Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: Text(title, textAlign: TextAlign.right, style: AppTextStyles.bodyText))),
                             Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: IconButton(icon: const Icon(Icons.read_more), onPressed: () {goToRead(context);}))),
                 ]
               );
@@ -213,7 +214,7 @@ class MessageUserRow extends StatelessWidget {
               onTap: () => {goToProfileTemp(context, userID)}
               );
             } else {
-              return const Text("No user here!");
+              return const Text("No user here!", style: AppTextStyles.bodyText);
             }
           }
  
@@ -237,7 +238,7 @@ class MessageTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(child: Text('Title: $title'));
+    return Card(child: Text('Title: $title', style: AppTextStyles.bodyText));
   }
 }
 
@@ -249,7 +250,7 @@ class Message extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(child: Text(message));
+    return Card(child: Text(message, style: AppTextStyles.bodyText));
   }
 }
 
@@ -285,10 +286,10 @@ class MessageBottom extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Are you sure you want to unfriend?'),
+          title: const Text('Are you sure you want to unfriend?', style: AppTextStyles.bodyText),
           actions: <Widget>[
             TextButton(
-              child: const Text('No'),
+              child: const Text('No', style: AppTextStyles.bodyText),
               onPressed: () {
                 Navigator.of(context).pop();
 
@@ -296,7 +297,7 @@ class MessageBottom extends StatelessWidget {
               },
             ),
             TextButton(
-              child: const Text('Yes'),
+              child: const Text('Yes', style: AppTextStyles.bodyText),
               onPressed: () async {
                 // Adding to provider
                 await removeMessage();
@@ -385,7 +386,7 @@ class MessageFormState extends State<ComposeMessageForm> {
       Navigator.of(context).pop();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(// is this context <<<
-              const SnackBar(content: Text('Invalid Message!')));
+              const SnackBar(content: Text('Invalid Message!', style: AppTextStyles.bodyText)));
     }
 
     textFieldsValue = List.empty(growable: true);
@@ -459,7 +460,7 @@ class MessageFormState extends State<ComposeMessageForm> {
             Padding(
               padding: const EdgeInsets.all(26.0),
               child: ElevatedButton(
-              child: const Text('Send Message'),
+              child: const Text('Send Message', style: AppTextStyles.bodyText),
               onPressed: () async {
                   await sendNewMessage();
                 },

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../common/styling.dart';
 import '../database/galleryStoreService.dart';
 import '../model/galleryImage.dart';
 
@@ -26,7 +27,7 @@ class GalleryItem extends StatelessWidget {
         child: Column(
           children: <Widget> [
             Image.network(galleryImage.src, scale: 0.3),
-            Text(galleryImage.imageName)
+            Text(galleryImage.imageName, style: AppTextStyles.bodyText)
           ]
         )
       ),
@@ -59,7 +60,7 @@ class UserGalleryPreview extends StatelessWidget {
         child: Column(
           children: <Widget> [
             Expanded(flex: 4, child: Image.network(galleryImage.src, height: 110.0)),
-            Flexible(child: Text(galleryImage.imageName))
+            Flexible(child: Text(galleryImage.imageName, style: AppTextStyles.bodyText))
           ]
         )
       ),
@@ -92,7 +93,7 @@ class UserGalleryItem extends StatelessWidget {
         child: Column(
           children: <Widget> [
             Image.network(galleryImage.src, scale: 0.3, height: 110.0),
-            Text(galleryImage.imageName)
+            Text(galleryImage.imageName, style: AppTextStyles.bodyText)
           ]
         )
       ),

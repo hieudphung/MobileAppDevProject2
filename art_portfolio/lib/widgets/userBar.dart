@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../common/styling.dart';
 import '../model/user.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -51,7 +52,7 @@ class userBar extends StatelessWidget{
                             padding: const EdgeInsets.fromLTRB(15, 5, 25, 5), 
                             child: Align(
                               alignment: Alignment.centerRight,
-                              child: Text('Logged in as: ${name.data!}')
+                              child: Text('Logged in as: ${name.data!}', style: AppTextStyles.bodyText)
                             )
                   );
                 }
@@ -60,7 +61,7 @@ class userBar extends StatelessWidget{
                             padding: EdgeInsets.fromLTRB(15, 5, 25, 5), 
                             child: Align(
                               alignment: Alignment.centerRight,
-                              child: Text('Loading...')
+                              child: Text('Loading...', style: AppTextStyles.bodyText)
                             )
                 );
               }

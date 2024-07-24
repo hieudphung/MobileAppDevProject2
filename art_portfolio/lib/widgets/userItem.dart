@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../common/common.dart';
+import '../common/styling.dart';
 import '../pages/friendsListPage.dart';
 import '../pages/messagesPage.dart';
 
@@ -32,7 +33,7 @@ class UserCard extends StatelessWidget {
                 ],
               );
             } else {
-              return const Text("No user here!");
+              return const Text("No user here!", style: AppTextStyles.bodyText);
             }
           }
 
@@ -66,11 +67,11 @@ class UserName extends StatelessWidget {
           child: 
             Column(
               children: <Widget> [
-                Expanded(child: Text(name, textAlign: TextAlign.center,)),
+                Expanded(child: Text(name, textAlign: TextAlign.center, style: AppTextStyles.bodyText)),
                 Expanded(child: 
                   Row(
                     children: <Widget> [
-                      const Expanded(child: Text('Uploads: ')),
+                      const Expanded(child: Text('Uploads: ', style: AppTextStyles.bodyText)),
                       Expanded(child: 
                         StreamBuilder(
                           stream: GalleryStoreService.instance.getUserGalleryStream(userID),
@@ -78,10 +79,10 @@ class UserName extends StatelessWidget {
                             if (streamSnapshot.hasData) {
                               int docSize = streamSnapshot.data!.size;
 
-                              return Text('$docSize');
+                              return Text('$docSize', style: AppTextStyles.bodyText);
                             }
 
-                            return const Text('0');
+                            return const Text('0', style: AppTextStyles.bodyText);
                           }
                       )),
                     ]
@@ -108,8 +109,8 @@ class UserAbout extends StatelessWidget {
       child: Card(
         child: Column(
           children: <Widget>[
-            const Text('About'),
-            Text(description)
+            const Text('About', style: AppTextStyles.bodyText),
+            Text(description, style: AppTextStyles.bodyText)
           ]
         )
       )
@@ -140,11 +141,11 @@ class UserEdit extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Edit Profile'),
+          title: const Text('Edit Profile', style: AppTextStyles.bodyText),
           content: UserEditForm(keepingData: saveData, oldDescription: description),
           actions: <Widget>[
             TextButton(
-              child: const Text('Cancel'),
+              child: const Text('Cancel', style: AppTextStyles.bodyText),
               onPressed: () {
                 Navigator.of(context).pop();
 
@@ -152,7 +153,7 @@ class UserEdit extends StatelessWidget {
               },
             ),
             TextButton(
-              child: const Text('Update'),
+              child: const Text('Update', style: AppTextStyles.bodyText),
               onPressed: () async {
                 // Adding to provider
                 updateUser(data['validated'], data['description']);
@@ -295,16 +296,16 @@ class OtherUsers extends StatefulWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Send this user a friend request?'),
+          title: const Text('Send this user a friend request?', style: AppTextStyles.bodyText),
           actions: <Widget>[
             TextButton(
-              child: const Text('No'),
+              child: const Text('No', style: AppTextStyles.bodyText),
               onPressed: () {
                 Navigator.of(context).pop(false);
               },
             ),
             TextButton(
-              child: const Text('Yes'),
+              child: const Text('Yes', style: AppTextStyles.bodyText),
               onPressed: () async {
                 // Adding to provider
                 GalleryStoreService.instance.addFriendRequest(userID, otherUserID);
@@ -441,20 +442,20 @@ class UserRow extends StatelessWidget {
               child: Row(
                 children: <Widget>[
                   AvatarImage(avatarSrc: snapshot.data!.avatar, size: 46.0, padding: 14.0),
-                  Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: Text(snapshot.data!.username, textAlign: TextAlign.left,))),
+                  Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: Text(snapshot.data!.username, textAlign: TextAlign.left, style: AppTextStyles.bodyText))),
                 ]
               ),
               onTap: () => {goToProfileTemp(context, snapshot.data!.id)}
               );
             } else {
-              return const Text("No user here!");
+              return const Text("No user here!", style: AppTextStyles.bodyText);
             }
           }
 
           return const Row(
                 children: <Widget>[
                            AvatarImage(avatarSrc: '', size: 46.0, padding: 14.0),
-                           Expanded(child: Padding(padding: EdgeInsets.all(1.5), child: Text('Blank User', textAlign: TextAlign.left,))),
+                           Expanded(child: Padding(padding: EdgeInsets.all(1.5), child: Text('Blank User', textAlign: TextAlign.left, style: AppTextStyles.bodyText))),
             ]
         );
       },

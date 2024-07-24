@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../common/styling.dart';
 import '../widgets/messageContent.dart';
 
 class MessagesListPage extends StatelessWidget {
@@ -66,8 +67,8 @@ class MessagePage extends StatelessWidget {
 
     //assumed can only be accessed by the user anyways, not others
     return Scaffold(
-            appBar: AppBar(title: const Text('Messages'),
-                           backgroundColor: const Color.fromARGB(255, 45, 255, 115),
+            appBar: AppBar(title: const Text('Messages', style: AppTextStyles.headline1),
+                           backgroundColor: AppColors.appBarColor,
             ),
             body: MessageBody(senderID: finalSender,
                               receiverID: finalReceiver,
@@ -126,8 +127,8 @@ class ComposeMessagePage extends StatelessWidget {
 
     //assumed can only be accessed by the user anyways, not others
     return Scaffold(
-            appBar: AppBar(title: const Text('New Message'),
-                           backgroundColor: const Color.fromARGB(255, 45, 255, 115),
+            appBar: AppBar(title: const Text('New Message', style: AppTextStyles.headline1),
+                           backgroundColor: AppColors.appBarColor,
             ),
             body: ComposeMessageBody(
                               senderID: uid,

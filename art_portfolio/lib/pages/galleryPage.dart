@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../common/styling.dart';
 import '../database/galleryStoreService.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -173,7 +174,7 @@ class GalleryList extends StatelessWidget {
                 }
               );
             } else {
-              return const Text("No images here!");
+              return const Text("No images here!", style: AppTextStyles.bodyText);
             }
           }
 

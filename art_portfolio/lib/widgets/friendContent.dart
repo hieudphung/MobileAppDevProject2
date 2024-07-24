@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../common/common.dart';
+import '../common/styling.dart';
 import '../database/galleryStoreService.dart';
 import '../model/user.dart';
 
@@ -46,7 +47,7 @@ class UserFriendsList extends StatelessWidget {
               );
 
             } else {
-              return const Text("No friends");
+              return const Text("No friends", style: AppTextStyles.bodyText);
             }
           }
 
@@ -80,20 +81,20 @@ class ShortenedFriendRow extends StatelessWidget {
                 child: Row(
                   children: <Widget>[
                     AvatarImage(avatarSrc: snapshot.data!.avatar, size: 30.0, padding: 5.0),
-                    Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: Text(snapshot.data!.username, textAlign: TextAlign.left,)))
+                    Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: Text(snapshot.data!.username, textAlign: TextAlign.left, style: AppTextStyles.bodyText)))
                   ]
                 ),
                 onTap: () => {goToProfile(context, friendID)}
               );
             } else {
-              return const Text("No user here!");
+              return const Text("No user here!", style: AppTextStyles.bodyText);
             }
           }
 
           return const Row(
                   children: <Widget>[
                     AvatarImage(avatarSrc: '', size: 30.0, padding: 5.0),
-                    Expanded(child: Padding(padding: EdgeInsets.all(1.5), child: Text('Blank User', textAlign: TextAlign.left,)))
+                    Expanded(child: Padding(padding: EdgeInsets.all(1.5), child: Text('Blank User', textAlign: TextAlign.left, style: AppTextStyles.bodyText)))
             ]
           );
         },
@@ -121,10 +122,10 @@ class FriendRow extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Are you sure you want to unfriend?'),
+          title: const Text('Are you sure you want to unfriend?', style: AppTextStyles.bodyText),
           actions: <Widget>[
             TextButton(
-              child: const Text('No'),
+              child: const Text('No', style: AppTextStyles.bodyText),
               onPressed: () {
                 Navigator.of(context).pop();
 
@@ -132,7 +133,7 @@ class FriendRow extends StatelessWidget {
               },
             ),
             TextButton(
-              child: const Text('Yes'),
+              child: const Text('Yes', style: AppTextStyles.bodyText),
               onPressed: () {
                 // Adding to provider
                 unfriend();
@@ -163,7 +164,7 @@ class FriendRow extends StatelessWidget {
               child: Row(
                   children: <Widget>[
                     AvatarImage(avatarSrc: snapshot.data!.avatar, size: 46.0, padding: 14.0),
-                    Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: Text(snapshot.data!.username, textAlign: TextAlign.left,))),
+                    Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: Text(snapshot.data!.username, textAlign: TextAlign.left, style: AppTextStyles.bodyText))),
                     Builder(
                       builder: (context) {
                       if (isUser) return Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: IconButton(icon: const Icon(Icons.cancel), onPressed: () {showUnfriendDialog(context);})));
@@ -174,14 +175,14 @@ class FriendRow extends StatelessWidget {
               onTap: () => {goToProfile(context, friendID)}
               );
             } else {
-              return const Text("No user here!");
+              return const Text("No user here!", style: AppTextStyles.bodyText);
             }
           }
 
           return Row(
                 children: <Widget>[
                   const AvatarImage(avatarSrc: '', size: 46.0, padding: 14.0),
-                  const Expanded(child: Padding(padding: EdgeInsets.all(1.5), child: Text('Loading...', textAlign: TextAlign.left,))),
+                  const Expanded(child: Padding(padding: EdgeInsets.all(1.5), child: Text('Loading...', textAlign: TextAlign.left, style: AppTextStyles.bodyText))),
                   Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: IconButton(icon: const Icon(Icons.cancel), onPressed: () {})))
             ]
           );
@@ -226,7 +227,7 @@ class FriendRequestList extends StatelessWidget {
               );
 
             } else {
-              return const Text("No friend requests");
+              return const Text("No friend requests", style: AppTextStyles.bodyText);
             }
           }
 
@@ -270,8 +271,8 @@ class RequestRow extends StatelessWidget {
               child: Row(
                 children: <Widget>[
                   AvatarImage(avatarSrc: snapshot.data!.avatar, size: 46.0, padding: 14.0),
-                  Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: Text(snapshot.data!.username, textAlign: TextAlign.left,))),
-                  const Expanded(child: Padding(padding: EdgeInsets.all(1.5), child: Text('Incoming', textAlign: TextAlign.right,))),
+                  Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: Text(snapshot.data!.username, textAlign: TextAlign.left, style: AppTextStyles.bodyText))),
+                  const Expanded(child: Padding(padding: EdgeInsets.all(1.5), child: Text('Incoming', textAlign: TextAlign.right, style: AppTextStyles.bodyText))),
                   Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: IconButton(icon: const Icon(Icons.check), onPressed: () async {await showRequestForm(context);}))),
                   Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: IconButton(icon: const Icon(Icons.cancel), onPressed: () async {await showDeclineForm(context);})))
                 ]
@@ -279,14 +280,14 @@ class RequestRow extends StatelessWidget {
               onTap: () => {goToProfileTemp(context, senderID)}
               );
             } else {
-              return const Text("No user here!");
+              return const Text("No user here!", style: AppTextStyles.bodyText);
             }
           }
 
           return Row(
                 children: <Widget>[
                             const AvatarImage(avatarSrc: '', size: 46.0, padding: 14.0),
-                            const Expanded(child: Padding(padding: EdgeInsets.all(1.5), child: Text('Blank User', textAlign: TextAlign.left,))),
+                            const Expanded(child: Padding(padding: EdgeInsets.all(1.5), child: Text('Blank User', textAlign: TextAlign.left, style: AppTextStyles.bodyText))),
                             Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: IconButton(icon: const Icon(Icons.check), onPressed: () {}))),
                             Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: IconButton(icon: const Icon(Icons.cancel), onPressed: () {})))
             ]
@@ -318,22 +319,22 @@ class SendRow extends StatelessWidget {
               child: Row(
                 children: <Widget>[
                             AvatarImage(avatarSrc: snapshot.data!.avatar, size: 46.0, padding: 14.0),
-                            Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: Text(snapshot.data!.username, textAlign: TextAlign.left,))),
-                            const Expanded(child: Padding(padding: EdgeInsets.all(1.5), child: Text('Pending...')))
+                            Expanded(child: Padding(padding: const EdgeInsets.all(1.5), child: Text(snapshot.data!.username, textAlign: TextAlign.left, style: AppTextStyles.bodyText))),
+                            const Expanded(child: Padding(padding: EdgeInsets.all(1.5), child: Text('Pending...', style: AppTextStyles.bodyText)))
                 ]
               ),
               onTap: () => {goToProfile(context, recipientID)}
               );
             } else {
-              return const Text("No user here!");
+              return const Text("No user here!", style: AppTextStyles.bodyText);
             }
           }
  
           return const Row(
                 children: <Widget>[
                             AvatarImage(avatarSrc: '', size: 46.0, padding: 14.0),
-                            Expanded(child: Padding(padding: EdgeInsets.all(1.5), child: Text('Blank User', textAlign: TextAlign.left,))),
-                            Expanded(child: Padding(padding: EdgeInsets.all(1.5), child: Text('Pending...')))
+                            Expanded(child: Padding(padding: EdgeInsets.all(1.5), child: Text('Blank User', textAlign: TextAlign.left, style: AppTextStyles.bodyText))),
+                            Expanded(child: Padding(padding: EdgeInsets.all(1.5), child: Text('Pending...', style: AppTextStyles.bodyText)))
                 ]
               );
         },

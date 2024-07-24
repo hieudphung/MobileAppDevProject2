@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'common/styling.dart';
 import 'pages/galleryPage.dart';
 import 'pages/messagesPage.dart';
 import 'pages/userLookupPage.dart';
@@ -74,7 +75,8 @@ class _ToMainPageState extends State<ToMainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Art Portfolio'),
+        title: const Text('Art Portfolio', style: AppTextStyles.headline1),
+        backgroundColor: AppColors.appBarColor,
       ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),

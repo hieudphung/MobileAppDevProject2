@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../common/styling.dart';
 import '../model/galleryImage.dart';
 
 import '../widgets/userBar.dart';
@@ -15,8 +16,8 @@ class GalleryItemPage extends StatelessWidget {
  @override
   Widget build(BuildContext context) {
     return Scaffold(
-            appBar: AppBar(title: Text(galleryItem.imageName),
-                           backgroundColor: const Color.fromARGB(255, 79, 255, 240)),
+            appBar: AppBar(title: Text(galleryItem.imageName, style: AppTextStyles.headline2),
+                           backgroundColor: AppColors.appBarColor),
             body: GalleryItemBody(imageID: galleryItem.imageID, 
                                   src: galleryItem.src, 
                                   title: galleryItem.imageName,

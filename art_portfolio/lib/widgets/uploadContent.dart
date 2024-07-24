@@ -12,6 +12,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import 'package:image_picker/image_picker.dart';
 
+import '../common/styling.dart';
 import '../pages/uploadsListPage.dart';
 
 class UserUploadsList extends StatelessWidget {
@@ -265,7 +266,7 @@ class UploadFormState extends State<UploadForm> {
             Padding(
               padding: const EdgeInsets.all(26.0),
               child: ElevatedButton(
-              child: const Text('Upload New Image'),
+              child: const Text('Upload New Image', style: AppTextStyles.bodyText),
               onPressed: () async {
                   await uploadNewImage();
                 },
@@ -285,7 +286,7 @@ class UploadFormState extends State<UploadForm> {
             Padding(
               padding: const EdgeInsets.all(26.0),
               child: ElevatedButton(
-              child: const Text('Submit New Artwork'),
+              child: const Text('Submit New Artwork', style: AppTextStyles.bodyText),
               onPressed: () async {
                   await submitNewArtwork();
                 },

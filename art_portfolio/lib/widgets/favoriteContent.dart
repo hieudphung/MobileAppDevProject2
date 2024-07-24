@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
+import '../common/styling.dart';
 import 'galleryItem.dart';
 
 class FavoritesList extends StatelessWidget {
@@ -29,7 +30,7 @@ class FavoritesList extends StatelessWidget {
             if (docSize > 0) {
               return FavoriteGalleryPreview(index: 0, imageID: streamSnapshot.data!.docs[0]['imageID']);
             } else {
-              return const Text("No favorites!");
+              return const Text("No favorites!", style: AppTextStyles.bodyText);
             }
           }
 
@@ -56,7 +57,7 @@ class FavoritesList extends StatelessWidget {
                   }
                 );
               } else {
-                return const Text("No favorites here!");
+                return const Text("No favorites here!", style: AppTextStyles.bodyText);
             }
           }
 

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../common/styling.dart';
 import '../database/galleryStoreService.dart';
 import 'commentContent.dart';
 
@@ -32,7 +33,7 @@ class DescriptionBox extends StatelessWidget {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Text('Description: $imageDescription'),
+        child: Text('Description: $imageDescription', style: AppTextStyles.bodyText),
       )
     );
   }
@@ -69,11 +70,11 @@ class SetButtons extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Edit Image Details'),
+          title: const Text('Edit Image Details', style: AppTextStyles.bodyText),
           content: ImageEditDetailForm(keepingData: saveData, oldTitle: oldTitle, oldDescription: oldDescription),
           actions: <Widget>[
             TextButton(
-              child: const Text('Cancel'),
+              child: const Text('Cancel', style: AppTextStyles.bodyText),
               onPressed: () {
                 Navigator.of(context).pop();
 
@@ -81,7 +82,7 @@ class SetButtons extends StatelessWidget {
               },
             ),
             TextButton(
-              child: const Text('Post'),
+              child: const Text('Post', style: AppTextStyles.bodyText),
               onPressed: () async {
                 // Adding to provider
                 updateImage(data['validated'], data['title'], data['description']);
@@ -274,14 +275,14 @@ class FavoriteCount extends StatelessWidget {
                           icon: const Icon(Icons.favorite),
                           color: (hasFavorite) ? Colors.pink[300] : Colors.grey[700],
                           onPressed: () async => addToFavorites(context, hasFavorite, currentUser.uid, existingID)),
-                    Text('$totalFavorites'),
+                    Text('$totalFavorites', style: AppTextStyles.bodyText),
                   ],);
                 }
 
                 return const Row(
                   children: <Widget>[
                     Icon(Icons.favorite),
-                    Text('0'),
+                    Text('0', style: AppTextStyles.bodyText),
                   ],);
             });
 

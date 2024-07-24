@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../common/common.dart';
+import '../common/styling.dart';
 import '../model/comment.dart';
 import '../model/user.dart';
 
@@ -33,11 +34,11 @@ class CommentForm extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Leave a Comment'),
+          title: const Text('Leave a Comment', style: AppTextStyles.bodyText),
           content: CommentPostForm(keepingData: saveData, oldText: ''),
           actions: <Widget>[
             TextButton(
-              child: const Text('Cancel'),
+              child: const Text('Cancel', style: AppTextStyles.bodyText),
               onPressed: () {
                 Navigator.of(context).pop();
 
@@ -45,7 +46,7 @@ class CommentForm extends StatelessWidget {
               },
             ),
             TextButton(
-              child: const Text('Post'),
+              child: const Text('Post', style: AppTextStyles.bodyText),
               onPressed: () async {
                 // Adding to provider
                 postComment(data['validated'], data['comment']);
@@ -182,7 +183,7 @@ class CommentBox extends StatelessWidget {
               }
             );
            } else {
-            return const Text("No comments yet!");
+            return const Text("No comments yet!", style: AppTextStyles.bodyText);
            }
           }
 
@@ -222,7 +223,7 @@ class CommentUserRow extends StatelessWidget {
               onTap: () => {goToProfileTemp(context, userID)}
               );
             } else {
-              return const Text("No user here!");
+              return const Text("No user here!", style: AppTextStyles.bodyText);
             }
           }
 
@@ -265,11 +266,11 @@ class CommentCard extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Edit Comment'),
+          title: const Text('Edit Comment', style: AppTextStyles.bodyText),
           content: CommentPostForm(keepingData: saveData, oldText: comment.comment),
           actions: <Widget>[
             TextButton(
-              child: const Text('Cancel'),
+              child: const Text('Cancel', style: AppTextStyles.bodyText),
               onPressed: () {
                 Navigator.of(context).pop();
 
@@ -345,7 +346,7 @@ class CommentCard extends StatelessWidget {
               Column(
                 children: <Widget>[
                     CommentUserRow(userID: comment.userID),
-                    Text(comment.comment),
+                    Text(comment.comment, style: AppTextStyles.bodyText),
                     Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
@@ -367,7 +368,7 @@ class CommentCard extends StatelessWidget {
               Column(
                 children: <Widget>[
                   CommentUserRow(userID: comment.userID),
-                  Text(comment.comment),
+                  Text(comment.comment, style: AppTextStyles.bodyText),
                   Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
@@ -381,7 +382,7 @@ class CommentCard extends StatelessWidget {
           } 
         }
 
-        return const Text('Loading comment...');
+        return const Text('Loading comment...', style: AppTextStyles.bodyText);
       }
     ); 
   }
