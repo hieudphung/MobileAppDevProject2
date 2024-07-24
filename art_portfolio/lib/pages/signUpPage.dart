@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../common/styling.dart';
 import '../database/galleryStoreService.dart';
 
 class SignupPage extends StatelessWidget {
@@ -9,22 +10,23 @@ class SignupPage extends StatelessWidget {
  @override
   Widget build(BuildContext context) {
     return Scaffold(
-            appBar: AppBar(title: const Text("Sign Up"),
-                           backgroundColor: Colors.indigo[200]),
+            appBar: AppBar(title: const Text("Sign Up", style: AppTextStyles.headline1),
+                           backgroundColor: AppColors.appBarColor),
+            resizeToAvoidBottomInset: false,
             body: SignupBody());
   }
 }
 
 class SignupBody extends StatefulWidget {
-  SignupBody({super.key});
-
-  final _signupFormKey = GlobalKey<FormState>();
+  const SignupBody({super.key});
 
   @override
   State<SignupBody> createState() => _SignupBodyState();
 }
 
 class _SignupBodyState extends State<SignupBody> {
+  final _signupFormKey = GlobalKey<FormState>();
+
   String newEmail = '';
   String newUser = '';
   String newPassword = '';
@@ -32,53 +34,60 @@ class _SignupBodyState extends State<SignupBody> {
   int errorFlag = 0;
 
   Future<void> _submitSignup() async {
+    if ((_signupFormKey.currentState!.validate())) {
+      final bool emailValid = 
+      RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(newEmail);
 
-    final bool emailValid = 
-    RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-      .hasMatch(newEmail);
+      final bool passwordsEqual = (newPassword == verifyPassword);
 
-    final bool passwordsEqual = (newPassword == verifyPassword);
+      //check if all are viable
+      if (emailValid && passwordsEqual) {
+        setState(() async {
+          //Now do sign-up
+          FirebaseAuth auth = FirebaseAuth.instance;
+          bool isCreated = false;
 
-    //check if all are viable
-    if (emailValid && passwordsEqual) {
-      setState(() async {
-        //Now do sign-up
-        FirebaseAuth auth = FirebaseAuth.instance;
-        bool isCreated = false;
+          try {
+            final cred = await auth.createUserWithEmailAndPassword(
+              email: newEmail,
+              password: newPassword,
+            );
 
-        try {
-          final cred = await auth.createUserWithEmailAndPassword(
-            email: newEmail,
-            password: newPassword,
-          );
+            isCreated = true;
 
-          isCreated = true;
-
-          //Create new user id in users database
-          await GalleryStoreService.instance.addUser(cred.user!.uid, newUser);
-          
-        } on FirebaseAuthException catch (e) {
-          if (e.code == 'weak-password') {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('The password provided is too weak.')));
-            errorFlag = 1;
-          } else if (e.code == 'email-already-in-use') {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('The account already exists for that email.')));
-            errorFlag = 2;
+            //Create new user id in users database
+            await GalleryStoreService.instance.addUser(cred.user!.uid, newUser);
+            
+          } on FirebaseAuthException catch (e) {
+            if (e.code == 'weak-password') {
+              if(context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('The password provided is too weak.')));
+              }
+              errorFlag = 1;
+            } else if (e.code == 'email-already-in-use') {
+              if(context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('The account already exists for that email.')));
+              }
+              errorFlag = 2;
+            }
+          } catch (e) {
+            print(e);
+            isCreated = false;
           }
-        } catch (e) {
-          print(e);
-          isCreated = false;
-        }
 
-        newEmail = '';
-        newUser = '';
-        newPassword = '';
-        verifyPassword = '';
+          newEmail = '';
+          newUser = '';
+          newPassword = '';
+          verifyPassword = '';
 
-        if (isCreated) {
-          Navigator.pop(context);
-        }
-      });
+          if (isCreated) {
+            if(context.mounted) {
+              Navigator.pop(context);
+            }
+          }
+        });
+      }
     }
   }
 
@@ -105,21 +114,26 @@ class _SignupBodyState extends State<SignupBody> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         const Flexible(
-          flex: 3,
+          flex: 2,
           child: Text('Signup Here',
-                      style: TextStyle(
-                        fontSize: 25.0,
-                      ),
+                      style: AppTextStyles.headline2
                     ),
         ),
-        Form (
-          key: widget._signupFormKey,
+        const SizedBox(height: 30),
+        Expanded(
+          flex: 3,
+          child: Card(
+            color: AppColors.cardColor,
+            child: Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Form (
+          key: _signupFormKey,
           child: 
           Expanded(
             flex: 2,
             child: Column(
         children: <Widget>[
-          Expanded(
+          Flexible(
             flex: 1,
             child: Padding(
               padding: EdgeInsets.fromLTRB(15, 0, 15, 5),
@@ -128,7 +142,7 @@ class _SignupBodyState extends State<SignupBody> {
                   border: UnderlineInputBorder(),
                   hintText: 'New Email',
                 ),
-                validator: (value){
+                validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Email empty!';
                   } else {
@@ -140,7 +154,8 @@ class _SignupBodyState extends State<SignupBody> {
               ),
             )
           ),
-          Expanded(
+          const SizedBox(height: 30),
+          Flexible(
             flex: 1,
             child: Padding(
               padding: EdgeInsets.fromLTRB(15, 0, 15, 5),
@@ -162,7 +177,8 @@ class _SignupBodyState extends State<SignupBody> {
               ),
             )
           ),
-          Expanded(
+          const SizedBox(height: 30),
+          Flexible(
             flex: 1,
             child: Padding(
               padding: EdgeInsets.fromLTRB(15, 0, 15, 5),
@@ -184,10 +200,11 @@ class _SignupBodyState extends State<SignupBody> {
               ),
             )
           ),
-          Expanded(
+          const SizedBox(height: 30),
+          Flexible(
             flex: 1,
             child: Padding(
-              padding: EdgeInsets.fromLTRB(15, 0, 15, 5),
+              padding: const EdgeInsets.fromLTRB(15, 0, 15, 5),
               child: TextFormField(
                 decoration: const InputDecoration(
                   border: UnderlineInputBorder(),
@@ -205,32 +222,19 @@ class _SignupBodyState extends State<SignupBody> {
               ),
             )
           ),
-          const SizedBox(height: 60),
+          const SizedBox(height: 30),
           Expanded(
             child: ElevatedButton(
-              child: const Text("Sign Up"),
+              style: AppButtonStyles.primaryButton,
               onPressed: () async {
-                if (widget._signupFormKey.currentState!.validate()) {
-                 await _submitSignup();
-                }
+                await _submitSignup();
               },
+              child: const Text("Sign Up"),
             ),
           ),
-          Builder(
-            builder: (context) {
-              switch (errorFlag) {
-                case 1:
-                  return Container(child: const Text('The password provided is too weak.'));
-                case 2:
-                  return Container(child: const Text('The account already exists for that email.'));
-                default:
-                  return Container();
-              }
-            }
-          )
         ]
       ),),
-      ),
+      ),),),),
       ]
     );
   }

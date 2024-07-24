@@ -360,7 +360,6 @@ class GalleryStoreService {
   }
 
   Future<void> acceptFriendRequest(String requestID) async {
-    CollectionReference friends = await instance.friends;
     CollectionReference friendRequests = await instance.friendRequests;
 
     await friendRequests.doc(requestID).get().then(

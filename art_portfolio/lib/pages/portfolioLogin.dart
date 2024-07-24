@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import './signUp.dart';
+import '../common/styling.dart';
+import 'signUpPage.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -11,16 +12,11 @@ class LoginPage extends StatelessWidget {
     // TODO: implement build
     return MaterialApp(
       title: 'Portfolio App',
-      theme: ThemeData(
-        primaryColor: const Color.fromARGB(255, 24, 132, 255),
-        colorScheme: ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 24, 132, 255),
-                                          brightness: Brightness.light,),
-        useMaterial3: true,
-      ),
+      theme: AppTheme.themeData,
       home: Scaffold(
             resizeToAvoidBottomInset : false,
-            appBar: AppBar(title: const Text('Porfolio Login'),
-                           backgroundColor: Colors.indigo[100]),
+            appBar: AppBar(title: const Text('Porfolio Login', style: AppTextStyles.headline1),
+                           backgroundColor: AppColors.appBarColor),
             body: PortfolioLogin()),
     );
   }
@@ -29,13 +25,13 @@ class LoginPage extends StatelessWidget {
 class PortfolioLogin extends StatefulWidget {
   PortfolioLogin({super.key});
 
-  final _loginFormKey = GlobalKey<FormState>();
-
   @override
   State<PortfolioLogin> createState() => _PortfolioLoginState();
 }
 
 class _PortfolioLoginState extends State<PortfolioLogin> {
+  final _loginFormKey = GlobalKey<FormState>();
+
   String email = '';
   String password = '';
 
@@ -43,6 +39,8 @@ class _PortfolioLoginState extends State<PortfolioLogin> {
     final bool emailValid = 
     RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
       .hasMatch(email);
+
+    bool loggedIn = false;
 
     if (emailValid) {
       FirebaseAuth auth = FirebaseAuth.instance;
@@ -52,12 +50,21 @@ class _PortfolioLoginState extends State<PortfolioLogin> {
           email: email,
           password: password
         );
+        loggedIn = true;
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
           print('No user found for that email.');
+          loggedIn = false;
         } else if (e.code == 'wrong-password') {
           print('Wrong password provided for that user.');
+          loggedIn = false;
         }
+      }
+    }
+
+    if (!loggedIn) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Login unsuccessful!')));
       }
     }
   }
@@ -85,13 +92,19 @@ class _PortfolioLoginState extends State<PortfolioLogin> {
         const Flexible(
           flex: 3,
           child: Text('Login Here',
-                      style: TextStyle(
-                        fontSize: 25.0,
-                      ),
+                      style: AppTextStyles.headline2
                     ),
         ),
-        Form (
-          key: widget._loginFormKey,
+        const SizedBox(height: 30),
+        Flexible(
+          flex: 2,
+          child:
+          Card(
+            color: AppColors.cardColor,
+            child: Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Form (
+          key: _loginFormKey,
           child: 
           Flexible(
             child: Column(
@@ -116,6 +129,7 @@ class _PortfolioLoginState extends State<PortfolioLogin> {
               ),
             )
           ),
+          const SizedBox(height: 30),
           Flexible(
             flex: 1,
             child: Padding(
@@ -137,19 +151,25 @@ class _PortfolioLoginState extends State<PortfolioLogin> {
               ),
             )
           ),
+          const SizedBox(height: 30),
           Flexible(
             child: ElevatedButton(
-              child: const Text("Login"),
+              style: AppButtonStyles.primaryButton,
               onPressed: () async {
-                if (widget._loginFormKey.currentState!.validate()) {
+                if (_loginFormKey.currentState!.validate()) {
                   await _submitLogin();
+                } else {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Fields empty!')));
+                  }
                 }
               },
+              child: const Text("Login"),
             ),
           ),
         ]
       ),),
-      ),
+      ),),),),
       const SizedBox(height: 60),
       Expanded(
           flex: 1,
@@ -158,10 +178,11 @@ class _PortfolioLoginState extends State<PortfolioLogin> {
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
               child: ElevatedButton(
-                child: const Text("Sign Up"),
+                style: AppButtonStyles.secondaryButton,
                 onPressed: () {
                   _goToSignupPage();
                 },
+                child: const Text("Sign Up"),
               ),
             ),
           ),
