@@ -15,7 +15,7 @@ class LoginPage extends StatelessWidget {
       theme: AppTheme.themeData,
       home: Scaffold(
             resizeToAvoidBottomInset : false,
-            appBar: AppBar(title: const Text('Porfolio Login', style: AppTextStyles.headline1),
+            appBar: AppBar(title: const Text('Portfolio Login', style: AppTextStyles.headline1),
                            backgroundColor: AppColors.appBarColor),
             body: PortfolioLogin()),
     );

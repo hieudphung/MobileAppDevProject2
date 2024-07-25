@@ -222,7 +222,10 @@ class GalleryStoreService {
   Future<void> addUser(String uid, String username) async {
     CollectionReference users = await instance.users;
 
-    await users.add({"userID": uid, "username": username});
+    await users.add({"userID": uid, 
+                     "username": username, 
+                     "avatarSrc": '',
+                     "about": 'This is a new profile!'});
   }
   
   Future<UserGalleryInfo> getUser(String uid) async {
@@ -269,7 +272,7 @@ class GalleryStoreService {
     return userToReturn;
   }
 
-  Future<void> updateUserDetails(String uid, String newAbout) async {
+  Future<void> updateUserDetails(String uid, String newAbout, String newAvatarSrc) async {
     CollectionReference users = await instance.users;
 
     //print('updating...');
@@ -279,7 +282,8 @@ class GalleryStoreService {
 
     await userSearch.get().then((snapshot) async => {
       await snapshot.docs.first.reference.update({
-          "about": newAbout
+          "about": newAbout,
+          "avatarSrc": newAvatarSrc
       })
     },);
   }

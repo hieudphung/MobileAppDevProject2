@@ -178,7 +178,7 @@ class UploadFormState extends State<UploadForm> {
 
         try {
           submitted = true;
-          await galleryItemRef.putData(galleryFile!.readAsBytesSync());
+          var uploading =  galleryItemRef.putData(galleryFile!.readAsBytesSync());
         } catch (e) {
           submitted = false;
           print(e);

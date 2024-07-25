@@ -60,9 +60,7 @@ class UserName extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(child: Row(
       children: <Widget>[
-        Padding(padding: const EdgeInsets.all(8.0), child: ClipRRect(
-          borderRadius: BorderRadius.circular(25.0),
-          child: Image.network(avatarLink, height: 50.0, width: 50.0))),
+        AvatarImage(avatarSrc: avatarLink, size: 50.0, padding: 8.0),
         Expanded(
           child: 
             Column(
@@ -125,15 +123,15 @@ class UserEdit extends StatelessWidget {
 
   final String userID;
 
-  void showUserEditDialog(BuildContext context, String description) {
+  void showUserEditDialog(BuildContext context, String description, String avatarSrc) {
     //For holding data from form
     Map data = {};
     void saveData(String formField, dynamic formInput){data[formField] = formInput;}
 
     //For sending to database
-    Future<void> updateUser(bool validate, String newDescription) async {
+    Future<void> updateUser(bool validate, String newDescription, String newAvatarSrc) async {
       if (validate) {
-        await GalleryStoreService.instance.updateUserDetails(userID, newDescription);
+        await GalleryStoreService.instance.updateUserDetails(userID, newDescription, newAvatarSrc);
       }
     }
 
@@ -142,7 +140,7 @@ class UserEdit extends StatelessWidget {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Edit Profile', style: AppTextStyles.bodyText),
-          content: UserEditForm(keepingData: saveData, oldDescription: description),
+          content: UserEditForm(keepingData: saveData, oldDescription: description, oldAvatarSrc: avatarSrc),
           actions: <Widget>[
             TextButton(
               child: const Text('Cancel', style: AppTextStyles.bodyText),
@@ -156,7 +154,7 @@ class UserEdit extends StatelessWidget {
               child: const Text('Update', style: AppTextStyles.bodyText),
               onPressed: () async {
                 // Adding to provider
-                updateUser(data['validated'], data['description']);
+                updateUser(data['validated'], data['description'], data['avatarSrc']);
 
                 // Handle adding new goal
                 Navigator.of(context).pop();
@@ -185,7 +183,7 @@ class UserEdit extends StatelessWidget {
                         alignment: Alignment.bottomRight,
                         child: IconButton(
                           icon: const Icon(Icons.edit),
-                          onPressed: () => showUserEditDialog(context, snapshot.data!.description)
+                          onPressed: () => showUserEditDialog(context, snapshot.data!.description, snapshot.data!.avatar)
                         )
                       )
                     );
@@ -210,10 +208,12 @@ class UserEdit extends StatelessWidget {
 class UserEditForm extends StatefulWidget {
   const UserEditForm({super.key,
   required this.keepingData,
-  required this.oldDescription});
+  required this.oldDescription,
+  required this.oldAvatarSrc});
 
   final Function keepingData;
   final String oldDescription;
+  final String oldAvatarSrc;
 
   @override
   State<UserEditForm> createState() => _UserEditDetailFormState();
@@ -224,6 +224,7 @@ class _UserEditDetailFormState extends State<UserEditForm> {
   bool validated = false;
 
   String _description = '';
+  String _avatarSrc = '';
 
   void validate() {
     if (_description.isEmpty) {
@@ -238,9 +239,11 @@ class _UserEditDetailFormState extends State<UserEditForm> {
     super.initState();
 
     _description = widget.oldDescription;
+    _avatarSrc = widget.oldAvatarSrc;
 
     widget.keepingData('validated', validated);
     widget.keepingData('description', _description);
+    widget.keepingData('avatarSrc', _avatarSrc);
   }
 
   @override
@@ -250,6 +253,31 @@ class _UserEditDetailFormState extends State<UserEditForm> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
+          SizedBox(
+            width: 600,
+            child: TextFormField(
+              decoration: const InputDecoration(
+                labelText: 'Set the Avatar Source'
+              ),
+
+              maxLines: 6,
+              minLines: 1,
+
+              initialValue: widget.oldAvatarSrc,
+
+              onChanged: (value) {
+                _avatarSrc = value;
+
+                validate();
+
+                setState(() {
+                  widget.keepingData('validated', validated);
+                  widget.keepingData('avatarSrc', _avatarSrc);
+                  }
+                );
+              },
+            ),
+          ),
           SizedBox(
             width: 600,
             child: TextFormField(

@@ -19,6 +19,7 @@ class UploadsListPage extends StatelessWidget {
           DefaultTabController(
             length: 2,
             child: Scaffold(
+            resizeToAvoidBottomInset : false,
             appBar: AppBar(title: const Text('Uploads List', style: AppTextStyles.headline2),
                            backgroundColor: const Color.fromARGB(255, 69, 188, 176),
                            bottom: const TabBar(
@@ -39,6 +40,7 @@ class UploadsListPage extends StatelessWidget {
     DefaultTabController(
             length: 1,
             child: Scaffold(
+            resizeToAvoidBottomInset : false,
             appBar: AppBar(title: const Text('Uploads List', style: AppTextStyles.headline2),
                            backgroundColor: const Color.fromARGB(255, 69, 188, 176),
                            bottom: const TabBar(

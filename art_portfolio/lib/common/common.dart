@@ -14,12 +14,12 @@ class AvatarImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (avatarSrc.length > 6) {
-      return Padding(padding: const EdgeInsets.all(14.0), child: ClipRRect(
+      return Padding(padding: EdgeInsets.all(padding), child: ClipRRect(
                           borderRadius: BorderRadius.circular(size/2),
                             child: Image.network(avatarSrc, height: size, width: size)));
     }
 
-    return Padding(padding: const EdgeInsets.all(14.0), child: ClipRRect(
+    return Padding(padding: EdgeInsets.all(padding), child: ClipRRect(
                           borderRadius: BorderRadius.circular(size/2),
                             child: Image.asset('assets/images/default.png', height: size, width: size)));
   }

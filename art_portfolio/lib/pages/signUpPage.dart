@@ -164,7 +164,6 @@ class _SignupBodyState extends State<SignupBody> {
                   border: UnderlineInputBorder(),
                   hintText: 'New User',
                 ),
-                obscureText: true,
                 validator: (value){
                   if (value == null || value.isEmpty) {
                     return 'User empty!';

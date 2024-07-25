@@ -70,6 +70,7 @@ class MessagePage extends StatelessWidget {
             appBar: AppBar(title: const Text('Messages', style: AppTextStyles.headline1),
                            backgroundColor: AppColors.appBarColor,
             ),
+            resizeToAvoidBottomInset: false,
             body: MessageBody(senderID: finalSender,
                               receiverID: finalReceiver,
                               title: title,
@@ -130,6 +131,7 @@ class ComposeMessagePage extends StatelessWidget {
             appBar: AppBar(title: const Text('New Message', style: AppTextStyles.headline2),
                            backgroundColor: AppColors.appBarColor,
             ),
+            resizeToAvoidBottomInset: false,
             body: ComposeMessageBody(
                               senderID: uid,
                               receiverID: receiverID,

@@ -286,7 +286,7 @@ class MessageBottom extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Are you sure you want to unfriend?', style: AppTextStyles.bodyText),
+          title: const Text('Are you sure you want to delete this message?', style: AppTextStyles.bodyText),
           actions: <Widget>[
             TextButton(
               child: const Text('No', style: AppTextStyles.bodyText),
